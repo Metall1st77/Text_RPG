@@ -14,8 +14,6 @@ max_attack = 100
 max_health = 100
 max_armor = 100
 
-
-
 job_for_race = {'human' : 'trader',
                 'werewolf' : 'hunter',
                 'treant' : 'forester',
