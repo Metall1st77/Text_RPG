@@ -1,4 +1,4 @@
-import creature
+from creature import creature
 
 class human(creature):
     # human has an ability to talk with all other races without any problems;

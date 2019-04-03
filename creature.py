@@ -1,4 +1,15 @@
+import random
+import sys
+import math
+
 class creature:
+
+    sexes = ('male', 'female')
+    male_names = ('Avraam', 'Ben', 'Carl', 'Dennis', 'Eagle', 'Franc')
+    female_names = ('Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia')
+    jobs = ('none', 'quest', 'helper', 'warrior')
+    races = ('human', 'werewolf', 'treant', 'tech', 'demon')
+    dangers = ('none', 'unknown', 'safe', 'unstable', 'dangerous')
 
     little = 10
     standard = 20
@@ -27,11 +38,12 @@ class creature:
         self.speed = self.standard_speed
         self.state = self.race
         if self.sex == 'male':
-            self.name = random.choice(male_names)
+            self.name = random.choice(self.male_names)
         else:
-            self.name = random.choice(female_names)
+            self.name = random.choice(self.female_names)
 
     def set_name(self, name, speech = False):
+        name = name[0].upper() + name[1:].lower()
         if speech:
             print("{} changed his name to {}!".format(self.name, name))
         self.name = name
@@ -82,11 +94,11 @@ class creature:
         self.armor = armor
 
     def set_job(self, new_job, speech = False):
-        if new_job in jobs:
+        if new_job in self.jobs:
             if speech:
                 print("{} was fired from job \"{}\".".format(self.name, self.job))
                 print("{} got a job \"{}\".".format(self.name, new_job))
-            self.job = job
+            self.job = new_job
         else:
             print("The job is incorrect")
 

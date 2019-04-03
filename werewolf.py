@@ -1,4 +1,4 @@
-import creature
+from creature import creature
 
 class werewolf(creature):
     # werewolf has an ability to become either human or wolf;

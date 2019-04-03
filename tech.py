@@ -1,4 +1,4 @@
-import creature
+from creature import creature
 
 class tech(creature):
     # tech has an ability to create mechanisms and restore an armor

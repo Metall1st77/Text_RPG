@@ -2,23 +2,19 @@ import random
 import sys
 import math
 
-import human
-import werewolf
-import treant
-import tech
-import demon
+from creature import creature
+from human import human
+from werewolf import werewolf
+from treant import treant
+from tech import tech
+from demon import demon
 
 max_level  = 100
 max_attack = 100
 max_health = 100
 max_armor = 100
 
-sexes = ('male', 'female')
-male_names = ('Avraam', 'Ben', 'Carl', 'Dennis', 'Eagle', 'Franc')
-female_names = ('Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia')
-jobs = ('none', 'quest', 'helper', 'warrior')
-races = ('human', 'werewolf', 'treant', 'tech', 'demon')
-dangers = ('none', 'unknown', 'safe', 'unstable', 'dangerous')
+
 
 job_for_race = {'human' : 'trader',
                 'werewolf' : 'hunter',
@@ -40,7 +36,7 @@ if __name__ == "__main__":
     job = 'none'
 
     mob = creature(sex, race, level, danger, attack, health, armor, job)
-    mob.set_name('George', True)
+    mob.set_name('fFfFFfFeeEge', True)
     mob.levelup(True)
     mob.set_job('helper', True)
 
