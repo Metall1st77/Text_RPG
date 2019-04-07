@@ -1,11 +1,18 @@
 import random
 import sys
 import math
+import time
 
 
 def clear_screen():
     for i in range(0, 50):
         print("\n")
+
+def loading(t = 1):
+    # clear_screen()
+    print("Loading...", end='')
+    time.sleep(1)
+
 
 def start_game():
     print("game started")

@@ -1,6 +1,7 @@
 import random
 import sys
 import math
+import time
 
 from creature import creature
 from human import human
@@ -25,7 +26,7 @@ job_for_race = {'human' : 'trader',
 interferences = ('@', '#', '№', '$', '%', '&', '*')
 
 if __name__ == "__main__":
-    main.menu(True)
+    main.loading()
     # creating a mob needs (sex, level, danger lvl, attack, health, armor, job)
     sex = 'male'
     race = 'human'
