@@ -10,8 +10,12 @@ def clear_screen():
 
 def loading(t = 1):
     # clear_screen()
-    print("Loading...", end='')
-    time.sleep(1)
+    k = 0
+    print("Loading", end='')
+    while k < 3:
+        print(".", end='')
+        time.sleep(1)
+        k += 1
 
 
 def start_game():
