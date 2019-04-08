@@ -13,8 +13,8 @@ def loading(t = 1):
     k = 0
     print("Loading", end='')
     while k < 3:
-        print(".", end='')
         time.sleep(1)
+        print(".", end='')
         k += 1
 
 
