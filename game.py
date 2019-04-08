@@ -26,7 +26,7 @@ job_for_race = {'human' : 'trader',
 interferences = ('@', '#', '№', '$', '%', '&', '*')
 
 if __name__ == "__main__":
-    main.loading()
+    main.menu(True)
     # creating a mob needs (sex, level, danger lvl, attack, health, armor, job)
     sex = 'male'
     race = 'human'
