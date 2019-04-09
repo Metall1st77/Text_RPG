@@ -10,7 +10,7 @@ from treant import treant
 from tech import tech
 from demon import demon
 
-import main
+from main import main
 
 max_level  = 100
 max_attack = 100
@@ -26,7 +26,7 @@ job_for_race = {'human' : 'trader',
 interferences = ('@', '#', '№', '$', '%', '&', '*')
 
 if __name__ == "__main__":
-    main.menu(True)
+    game = main()
     # creating a mob needs (sex, level, danger lvl, attack, health, armor, job)
     sex = 'male'
     race = 'human'
