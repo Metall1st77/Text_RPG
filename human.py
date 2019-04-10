@@ -15,7 +15,7 @@ class human(creature):
         self.attack -= creature.little
         self.health -= creature.little
         if self.sex == 'male':
-            self.portrait = 'man.txt'
+            self.portrait += 'man.txt'
         else:
-            self.portrait = 'woman.txt'
+            self.portrait += 'woman.txt'
         # print("\nafter:\nsex : {}\nrace : {}\nlevel : {}\ndanger : {}\nattack : {}\nhealth : {}\narmor : {}\njob : {}\nstate : {}\nability : {}\n\n".format(self.sex, self.race, self.level, self.danger, self.attack, self.health, self.armor, self.job, self.state, self.ability))

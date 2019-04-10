@@ -50,6 +50,7 @@ class creature:
         self.attack = attack
         self.health = health
         self.armor = armor
+        self.portrait = 'portraits/'
         self.job = None
         self.money = 0
         self.mana = self.max_mana

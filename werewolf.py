@@ -13,7 +13,7 @@ class werewolf(creature):
         self.armor += creature.standard
         self.attack -= creature.little
         self.health -= creature.little
-        self.portrait = 'werewolf.txt'
+        self.portrait += 'werewolf.txt'
 
     def transform(self):
         if self.state == 'human':
