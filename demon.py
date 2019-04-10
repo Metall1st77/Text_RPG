@@ -13,6 +13,7 @@ class demon(creature):
         self.attack -= creature.standard
         self.health += creature.much
         self.souls = 0
+        self.portrait = 'demon.txt'
 
     def devour(self):
         if self.souls <= 10:

@@ -14,8 +14,8 @@ class tech(creature):
         self.armor += creature.much
         self.attack -= creature.standard
         self.health -= creature.standard
-        self.mana = max_mana
         self.max_health = self.health
+        self.portrait = 'tech.txt'
 
     def restore(self, hp):
         hp_ = hp

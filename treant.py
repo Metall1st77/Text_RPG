@@ -13,6 +13,7 @@ class treant(creature):
         self.attack -= creature.standard
         self.health += creature.much
         self.real_health = self.health
+        self.portrait = 'treant.txt'
 
     def invulnerability(self):
         if self.state == 'treant':

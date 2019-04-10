@@ -11,19 +11,8 @@ from tech import tech
 from demon import demon
 
 from main import main
-
-max_level  = 100
-max_attack = 100
-max_health = 100
-max_armor = 100
-
-job_for_race = {'human' : 'trader',
-                'werewolf' : 'hunter',
-                'treant' : 'forester',
-                'tech' : 'engineer',
-                'demon' : 'devourer'}
-
-interferences = ('@', '#', '№', '$', '%', '&', '*')
+from field import field
+from fight import fight
 
 if __name__ == "__main__":
     game = main()
@@ -47,3 +36,5 @@ if __name__ == "__main__":
     man = human(sex, race, level, danger, attack, health, armor, job)
     man.levelup(True)
     man.print_stats()
+
+    fight = fight(man.portrait)

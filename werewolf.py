@@ -8,13 +8,14 @@ class werewolf(creature):
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)
         self.ability = 'transformation'
-        self.race = 'human'
-        self.state = self.race
+        self.race = 'werewolf'
+        self.state = 'human'
         self.armor += creature.standard
         self.attack -= creature.little
         self.health -= creature.little
+        self.portrait = 'werewolf.txt'
 
-    def transform(self, speech):
+    def transform(self):
         if self.state == 'human':
             self.state = 'wolf'
             self.armor -= 2 * creature.standard

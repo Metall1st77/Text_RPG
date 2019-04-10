@@ -4,9 +4,25 @@ import math
 
 class creature:
 
+    max_level  = 100
+    max_attack = 100
+    max_health = 100
+    max_armor = 100
+    max_mana = 100
+
+    job_for_race = {'human' : 'trader',
+                    'werewolf' : 'hunter',
+                    'treant' : 'forester',
+                    'tech' : 'engineer',
+                    'demon' : 'devourer'}
+
     sexes = ('male', 'female')
+
     male_names = ('Avraam', 'Ben', 'Carl', 'Dennis', 'Eagle', 'Franc')
+    # TODO: other male names
     female_names = ('Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia')
+    # TODO: other female names
+
     jobs = ('none', 'quest', 'helper', 'warrior')
     races = ('human', 'werewolf', 'treant', 'tech', 'demon')
     dangers = ('none', 'unknown', 'safe', 'unstable', 'dangerous')
@@ -34,7 +50,9 @@ class creature:
         self.attack = attack
         self.health = health
         self.armor = armor
-        self.job = job
+        self.job = None
+        self.money = 0
+        self.mana = self.max_mana
         self.speed = self.standard_speed
         self.state = self.race
         if self.sex == 'male':
