@@ -90,6 +90,11 @@ class main:
         # TODO: come up with continueing (using progress bar maybe...)
         sys.exit()
 
+    def save_game(self):
+        print("game saved")
+        # TODO: come up with saving
+        sys.exit()
+
     def progress_bar(self):
         ratio = self.progress // self.max_progress
         bar = ''
@@ -101,7 +106,7 @@ class main:
 
 
     def menu(self, first = False, state = 'main'):
-        choises = ('1', '2', '3')
+        choices = ('1', '2', '3')
         checks = ('y', 'n')
         if not first:
             self.clear_screen()
@@ -110,6 +115,7 @@ class main:
             print('{}'.format('1. Continue'))
             print('{}'.format('2. Load game'))
             print('{}'.format('3. Save game'))
+            print('{}'.format('4. Quit'))
         else:
             print('{:*^30}'.format(' Main menu '))
             print('{}'.format('1. Game start'))
@@ -117,13 +123,15 @@ class main:
             print('{}'.format('3. Quit'))
 
         print('\n\nYour progress bar: {}'.format(self.progress_bar()))
-        choise = input("\n")
-        while not choise.lower() in choises:
-            choise = input("Choose the number of your answer please.\n")
-        if choise == '1' and state == 'main':
+        choice = input("\n")
+        while not choice.lower() in choices:
+            choice = input("Choose the number of your answer please.\n")
+        if choice == '1' and state == 'main':
             self.start_game()
-        elif choise == '2' and state == 'main' or choise == '1' and state == 'pause':
-            self.continue_game()
+        elif choice == '2':
+            self.load_game()
+        elif choice == '3' and state == 'pause':
+            self.save_game()
         else:
             check = input("Are you sure you want to quit? (y/n)\n")
             while not check.lower() in checks:
