@@ -28,3 +28,8 @@ class werewolf(creature):
             self.attack -= 2 * creature.little
             self.health -= 2 * creature.little
             self.speed += creature.standard
+
+    def info():
+        print("Werewolf has an ability to become either human or wolf")
+        print("As wolf he is faster and has more attack and health, but less armor,")
+        print("as human he is slower and has more armor, but less attack and health")

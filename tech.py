@@ -2,7 +2,7 @@ from creature import creature
 
 class tech(creature):
     # tech has an ability to create mechanisms and restore an armor
-    # tech has much more armour but much less attack
+    # tech has much more armour but less attack and health
 
     max_mana = 100
 
@@ -30,3 +30,7 @@ class tech(creature):
             self.health += 1
             sleep(100)
         print("{}\'s {} health was restored.".format(self.name, hp_))
+
+    def info():
+        print("Tech has an ability to create mechanisms and restore an armor")
+        print("Tech has much more armour but less attack and health")

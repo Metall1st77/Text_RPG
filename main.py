@@ -2,6 +2,7 @@ import random
 import sys
 import math
 import time
+import re
 
 from creature import creature
 from human import human
@@ -16,6 +17,17 @@ from fight import fight
 class main:
     progress = 0
     max_progress = 10
+    # TODO: commands
+    directions = ( ('left',  'a'),
+                   ('right', 'd'),
+                   ('up',    'w'), 
+                   ('down',  's') )
+    commands = { 'menu'     : ('continue', 'new', 'load'),
+                 'pause'    : ('continue', 'restart', 'save', 'load'),
+                 'fight'    : ('attack', 'defend', 'retire', 'payoff'),
+                 'walk'     : ('go', 'move'),
+                 'shop'     : ('buy', 'sell'),
+                 'anywhere' : ('pause', 'quit') }
 
     def __init__(self):
         # TODO: init function
@@ -35,17 +47,12 @@ class main:
     #         print(".", end='')
     #         k += 1
 
-    def command(self, keyword, possibility_to_move = True, possibility_to_fight = False,
-        possibility_to_defend = False):
-        keyword = keyword.lower()
-        if (keyword == 'go' or keyword == 'move') and possibility_to_move:
-            move(direction())
-        elif (keyword == 'attack' or keyword == 'fight') and possibility_to_fight:
-            attack()
-        elif keyword == 'defend' and possibility_to_defend:
-            defend()
-        elif keyword == 'pause':
-            menu(state = 'pause')
+
+    def command(self, status = 'main menu'):
+        # status may have values: 'main menu', 'pause', 'fight', 'walk', 'shop'
+        cmd = input()
+        cmd = re.sub(r'\s', ' ', cmd.lower())
+        cmd = cmd.split()
         # TODO:
 
     def attack(self):
@@ -80,7 +87,60 @@ class main:
             print("There are some problems...")
             sys.exit()
 
+    def create_character(self):
+        level = 0
+        danger = job = None
+        attack = health = 100
+        armor = 50
+
+        race = input("Choose your race (human, werewolf, tech, treant, demon. Type 'info' to see information about races): ")
+        race = race.lower()
+        while not race in creature.races:
+            print("Type correct race or 'info', please.")
+            race = input()
+            race = race.lower()
+            if race == 'info':
+                self.clear_screen()
+                print('{:*^30}'.format(' HUMAN '))
+                human.info()
+                print('{:*^30}'.format(' WEREWOLF '))
+                werewolf.info()
+                print('{:*^30}'.format(' TECH '))
+                tech.info()
+                print('{:*^30}'.format(' TREANT '))
+                treant.info()
+                print('{:*^30}'.format(' DEMON '))
+                demon.info()
+
+
+        sex = input("Choose your sex (male, female): ")
+        sex = sex.lower()
+        while not sex in creature.sexes:
+            print("Type correct sex, please.")
+            sex = input()
+            sex = sex.lower()
+
+        if race == 'human':
+            character = human(sex, race, level, danger, attack, health, armor, job)
+        elif race == 'demon':
+            character = demon(sex, race, level, danger, attack, health, armor, job)
+        elif race == 'tech':
+            character = tech(sex, race, level, danger, attack, health, armor, job)
+        elif race == 'treant':
+            character = treant(sex, race, level, danger, attack, health, armor, job)
+        elif race == 'werewolf':
+            character = werewolf(sex, race, level, danger, attack, health, armor, job)
+
+        name = input("Choose your name or get it by random (Type 'random'): ")
+        name = name.lower()
+        if name != 'random':
+            character.set_name(name)
+
+        # character.print_stats()
+        return character
+
     def start_game(self):
+        self.command()
         print("game started")
         # TODO: starting game and a plot
         sys.exit()
@@ -104,7 +164,6 @@ class main:
             bar += '-'
         return bar
 
-
     def menu(self, first = False, state = 'main'):
         choices = ('1', '2', '3')
         checks = ('y', 'n')
@@ -127,6 +186,7 @@ class main:
         while not choice.lower() in choices:
             choice = input("Choose the number of your answer please.\n")
         if choice == '1' and state == 'main':
+            self.character = self.create_character()
             self.start_game()
         elif choice == '2':
             self.load_game()

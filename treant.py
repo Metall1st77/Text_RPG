@@ -24,3 +24,7 @@ class treant(creature):
             self.state = 'treant'
             self.health = self.real_health
             self.speed = creature.standard_speed
+
+    def info():
+        print("Treant has an ability to enter a tree astral and get invulnerability")
+        print("Treant has much more health, but less attack and armor")

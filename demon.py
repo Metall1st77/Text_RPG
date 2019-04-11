@@ -23,3 +23,7 @@ class demon(creature):
             print("{} now got {} damage.".format(self.name, self.attack))
         else:
             print("{} got maximum amount of souls! ({}).".format(self.name, self.souls))
+
+    def info():
+        print("Demon has an ability to eat souls")
+        print("Demon has much more attack, but less armor and health")
