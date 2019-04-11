@@ -20,13 +20,17 @@ class main:
     # TODO: commands
     directions = ( ('left',  'a'),
                    ('right', 'd'),
-                   ('up',    'w'), 
+                   ('up',    'w'),
                    ('down',  's') )
+
+    items = ( 'sword',
+              'knife' )
+
     commands = { 'menu'     : ('continue', 'new', 'load'),
                  'pause'    : ('continue', 'restart', 'save', 'load'),
                  'fight'    : ('attack', 'defend', 'retire', 'payoff'),
-                 'walk'     : ('go', 'move'),
-                 'shop'     : ('buy', 'sell'),
+                 'walk'     : (('go', directions), ('move', directions)),
+                 'shop'     : (('buy', items), ('sell', items)),
                  'anywhere' : ('pause', 'quit') }
 
     def __init__(self):
@@ -48,11 +52,16 @@ class main:
     #         k += 1
 
 
-    def command(self, status = 'main menu'):
-        # status may have values: 'main menu', 'pause', 'fight', 'walk', 'shop'
+    def command(self, status = 'menu'):
+        # status may have values: 'menu', 'pause', 'fight', 'walk', 'shop'
         cmd = input()
         cmd = re.sub(r'\s', ' ', cmd.lower())
         cmd = cmd.split()
+        while not cmd[0] in commands[status]:
+            print("Wrong command. Type 'info' to see what you can do.\n")
+            cmd = input()
+            cmd = re.sub(r'\s', ' ', cmd.lower())
+            cmd = cmd.split()
         # TODO:
 
     def attack(self):
@@ -63,29 +72,9 @@ class main:
         # TODO: defend function
         return
 
-    def direction(self):
-        directions = ('up', 'down', 'left', 'right', 'w', 'a', 's', 'd')
-        direction = input("Where do you want to go?\n(Type up/left/down/right, or use w/a/s/d)\n")
-        while not direction.lower() in directions:
-            direction = input("Choose the your answer correctly please.\n")
-        return direction
-
     def move(self, direction):
-        if direction == 'left' or direction == 'a':
-            # TODO: left
-            return
-        elif direction == 'up' or direction == 'w':
-            # TODO: up
-            return
-        elif direction == 'down' or direction == 's':
-            # TODO: down
-            return
-        elif direction == 'right' or direction == 'd':
-            # TODO: right
-            return
-        else:
-            print("There are some problems...")
-            sys.exit()
+        # TODO: move function
+        return
 
     def create_character(self):
         level = 0
@@ -94,31 +83,31 @@ class main:
         armor = 50
 
         race = input("Choose your race (human, werewolf, tech, treant, demon. Type 'info' to see information about races): ")
-        race = race.lower()
+        race = re.sub(r'\s', '', race.lower())
         while not race in creature.races:
-            print("Type correct race or 'info', please.")
-            race = input()
-            race = race.lower()
             if race == 'info':
                 self.clear_screen()
-                print('{:*^30}'.format(' HUMAN '))
+                print('\n{:*^30}'.format(' HUMAN '))
                 human.info()
-                print('{:*^30}'.format(' WEREWOLF '))
+                print('\n{:*^30}'.format(' WEREWOLF '))
                 werewolf.info()
-                print('{:*^30}'.format(' TECH '))
+                print('\n{:*^30}'.format(' TECH '))
                 tech.info()
-                print('{:*^30}'.format(' TREANT '))
+                print('\n{:*^30}'.format(' TREANT '))
                 treant.info()
-                print('{:*^30}'.format(' DEMON '))
+                print('\n{:*^30}'.format(' DEMON '))
                 demon.info()
+            print("Type correct race or 'info', please.")
+            race = input()
+            race = re.sub(r'\s', '', race.lower())
 
 
         sex = input("Choose your sex (male, female): ")
-        sex = sex.lower()
+        sex = re.sub(r'\s', '', sex.lower())
         while not sex in creature.sexes:
             print("Type correct sex, please.")
             sex = input()
-            sex = sex.lower()
+            sex = re.sub(r'\s', '', sex.lower())
 
         if race == 'human':
             character = human(sex, race, level, danger, attack, health, armor, job)
@@ -132,16 +121,16 @@ class main:
             character = werewolf(sex, race, level, danger, attack, health, armor, job)
 
         name = input("Choose your name or get it by random (Type 'random'): ")
-        name = name.lower()
+        name = re.sub(r'\s', '', name.lower())
         if name != 'random':
             character.set_name(name)
-
         # character.print_stats()
         return character
 
     def start_game(self):
-        self.command()
         print("game started")
+        print("\n")
+        self.command()
         # TODO: starting game and a plot
         sys.exit()
 
@@ -188,6 +177,8 @@ class main:
         if choice == '1' and state == 'main':
             self.character = self.create_character()
             self.start_game()
+        elif choice == '1' and state == 'pause':
+            self.continue_game()
         elif choice == '2':
             self.load_game()
         elif choice == '3' and state == 'pause':
