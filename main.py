@@ -3,6 +3,7 @@ import sys
 import math
 import time
 import re
+import os
 
 from creature import creature
 from human import human
@@ -39,8 +40,7 @@ class main:
         return
 
     def clear_screen(self):
-        for i in range(0, 50):
-            print("\n")
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     # def loading(t = 1):
     #     # clear_screen()
