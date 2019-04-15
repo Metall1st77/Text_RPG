@@ -9,16 +9,32 @@ class field():
     symbs_for_biomes = { 'desert' : '.' }
 
     full_field = []
+    f_rows = 50
+    f_cols = 70
+
     visible_field = []
+    v_rows = 20
+    v_cols = 30
 
     def __init__(self, enemies = 0, biome = random.choice(biomes)):
-        for i in range(50):
+        for row in range(self.f_rows):
             self.full_field.append([])
-            for k in range(70):
-                self.full_field[i].append(self.symbs_for_biomes[biome])
+            for col in range(self.f_cols):
+                self.full_field[row].append(self.symbs_for_biomes[biome])
 
-    def show():
-        for i in range(50):
-            for k in range(70):
-                print(self.full_field[i][k], end='')
-            print()
+        for row in range(self.v_rows):
+            self.visible_field.append([])
+            for col in range(self.v_cols):
+                self.visible_field[row].append(self.full_field[row][col])
+
+    def show(self, full = False):
+        if full:
+            for i in range(self.f_rows):
+                for k in range(self.f_cols):
+                    print(self.full_field[i][k], end='')
+                print()
+        else:
+            for i in range(self.v_rows):
+                for k in range(self.v_cols):
+                    print(self.visible_field[i][k], end='')
+                print()

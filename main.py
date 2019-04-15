@@ -24,8 +24,11 @@ class main:
                    ('up',    'w'),
                    ('down',  's') )
 
-    items = ( 'sword',
-              'knife' )
+    weapons = ('sword', 'knife')
+    armors  = ('chainmail', 'platemail')
+    boots   = ('leather boots', 'steel boots')
+
+    items = ( weapons, armors, boots )
 
     commands = { 'menu'     : ('continue', 'new', 'load'),
                  'pause'    : ('continue', 'restart', 'save', 'load'),
@@ -36,8 +39,10 @@ class main:
                  'free'     : ('equip', 'unequip') }
 
     def __init__(self):
+        Field = field()
+        Field.show()
         # TODO: init function
-        self.menu(True)
+        self.menu()
         return
 
     def clear_screen(self):
@@ -129,6 +134,7 @@ class main:
         return character
 
     def start_game(self):
+        self.character = self.create_character()
         print("game started")
         print("\n")
         self.command()
@@ -154,11 +160,10 @@ class main:
             bar += '-'
         return bar
 
-    def menu(self, first = False, state = 'main'):
+    def menu(self, state = 'main'):
         choices = ('1', '2', '3')
         checks = ('y', 'n')
-        if not first:
-            self.clear_screen()
+
         if state == 'pause':
             print('{:*^30}'.format(' Pause '))
             print('{}'.format('1. Continue'))
@@ -176,7 +181,6 @@ class main:
         while not choice.lower() in choices:
             choice = input("Choose the number of your answer please.\n")
         if choice == '1' and state == 'main':
-            self.character = self.create_character()
             self.start_game()
         elif choice == '1' and state == 'pause':
             self.continue_game()
@@ -192,6 +196,6 @@ class main:
             if check == 'y':
                 sys.exit()
             elif state == 'pause':
-                self.menu(state = 'pause')
+                self.menu('pause')
             else:
                 self.menu()
