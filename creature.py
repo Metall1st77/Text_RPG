@@ -27,6 +27,14 @@ class creature:
     races = ('human', 'werewolf', 'treant', 'tech', 'demon')
     dangers = ('none', 'unknown', 'safe', 'unstable', 'dangerous')
 
+    item = { 'weapon' : None,
+             'armor'  : None,
+             'boots'  : None }
+
+    item_strength = { 'weapon' : None,
+                      'armor'  : None,
+                      'boots'  : None }
+
     little = 10
     standard = 20
     much = 40
@@ -60,6 +68,17 @@ class creature:
             self.name = random.choice(self.male_names)
         else:
             self.name = random.choice(self.female_names)
+
+    def __sub__(self, other):
+        # It is an attack function
+        self.health -= 0.01 * (150 - 0.75 * self.armor * other.attack)
+        if self.item['armor'] == None:
+            self.armor  -= 0.03 * other.attack
+        else:
+            self.item_strength['armor'] -= random.randint(0, 4)
+
+        if other.item['weapon'] != None:
+            other.item_strength['weapon'] -= random.randint(0, 4)
 
     def set_name(self, name, speech = False):
         name = name[0].upper() + name[1:].lower()

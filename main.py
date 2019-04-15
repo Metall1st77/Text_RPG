@@ -30,9 +30,10 @@ class main:
     commands = { 'menu'     : ('continue', 'new', 'load'),
                  'pause'    : ('continue', 'restart', 'save', 'load'),
                  'fight'    : ('attack', 'defend', 'retire', 'payoff'),
-                 'walk'     : (('go', directions), ('move', directions)),
-                 'shop'     : (('buy', items), ('sell', items)),
-                 'anywhere' : ('pause', 'quit') }
+                 'walk'     : ('go', 'move'),
+                 'shop'     : ('buy', 'sell'),
+                 'anywhere' : ('pause', 'quit'),
+                 'free'     : ('equip', 'unequip') }
 
     def __init__(self):
         # TODO: init function
@@ -53,7 +54,7 @@ class main:
 
 
     def command(self, status = 'menu'):
-        # status may have values: 'menu', 'pause', 'fight', 'walk', 'shop'
+        # status may have values: 'menu', 'pause', 'fight', 'walk', 'shop' and 'free'
         cmd = input()
         cmd = re.sub(r'\s', ' ', cmd.lower())
         cmd = cmd.split()
