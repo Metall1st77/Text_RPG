@@ -20,6 +20,7 @@ class main:
     max_progress = 10
     # TODO: commands
 
+    data = [ 'progress : ' + str(progress) ]
     file_saves = 'save_info.txt'
 
     level_enemy_count = [3, 4, 6, 8, 11, 15]
@@ -44,10 +45,8 @@ class main:
                  'free'     : ('equip', 'unequip') }
 
     def __init__(self):
-        Field = field()
-        Field.show()
         # TODO: init function
-        self.menu()
+        self.menu('pause')
         return
 
     def clear_screen(self):
@@ -139,20 +138,23 @@ class main:
         return character
 
     def show_stats(self, character):
-        clear_screen()
+        self.clear_screen()
         print(character)
+
+    def game(self):
+        # TODO: GAME!
+        return
 
     def start_game(self):
         self.character = self.create_character()
         self.show_stats(self.character)
-        Field = field(enemies = self.level_enemy_count[0])
+        Field = field(self.character, enemies = self.level_enemy_count[0])
         # Main loop
         self.game()
         print("game started")
         print("\n")
-        self.command()
         # TODO: starting game and a plot
-        sys.exit()
+        return
 
     def load_game(self, load):
         print("game loading")
@@ -165,7 +167,41 @@ class main:
         sys.exit()
 
     def save_game(self):
-        print("game saved")
+        self.clear_screen()
+        checks = ('y', 'n', 'yes', 'no')
+
+        save = input("Type the name of the file for saving: ")
+        file = open(self.file_saves, 'r')
+        saves = []
+        for load_no in file:
+            saves.append(load_no[:len(load_no) - 1])
+        file.close()
+
+        while save in saves:
+            check = input("This name is already in use. Are you sure you want to overwrite the save? (Type y/n)\n")
+            while not check in checks:
+                check = input("Type 'y' or 'n' please.\n")
+            if check[0] == 'n':
+                self.save_game()
+            else:
+                break
+
+        file = open(self.file_saves, 'r')
+        d = [line.strip() for line in file]
+        file.close()
+
+        file = open(self.file_saves, 'w')
+        for i in range(len(d)):
+            file.write(d[i] + '\n')
+        file.write(save)
+        file.close()
+
+        save_name = 'saves/' + save + '.txt'
+        s = open(save_name, 'w')
+        # s.write(self.data)
+        # s.write(self.character)
+        s.close()
+
         # TODO: come up with saving
         sys.exit()
 
@@ -179,8 +215,13 @@ class main:
         return bar
 
     def menu(self, state = 'main'):
-        choices = ('1', '2', '3', '4', 'continue', 'load', 'save', 'start', 'quit')
-        checks = ('y', 'n')
+        self.clear_screen()
+        current_state = state
+        choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit', 'info')
+        checks = ('y', 'n', 'yes', 'no')
+
+        main_choices = ('start', 'load', 'quit')
+        pause_choices = ('continue', 'load', 'save', 'quit')
 
         if state == 'pause':
             print('{:*^30}'.format(' Pause '))
@@ -195,42 +236,54 @@ class main:
             print('{}'.format('3. Quit'))
 
         print('\n\nYour progress bar: {}'.format(self.progress_bar()))
-        choice = input("\n")
+        choice = input("Choose the number of your choice or type 'info' please.\n")
         while not choice.lower() in choices:
-            choice = input("Choose the number of your answer please.\n")
+            choice = input("Choose the number of your choice or type 'info' please.\n")
+            choice = choice.lower()
         if (choice == '1' or choice == 'start') and state == 'main':
+            self.clear_screen()
             self.start_game()
 
         elif (choice == '1' or choice == 'continue') and state == 'pause':
+            self.clear_screen()
             self.continue_game()
 
         elif choice == '2' or choice == 'load':
+            self.clear_screen()
             print("\nThe following saves are available to you:\n")
             file = open(self.file_saves, 'r')
 
             no = 1
-            saves = []
+            saves = ['back']
             for load_no in file:
                 print('{}. {}'.format(no, load_no), end='')
                 saves.append(load_no[:len(load_no) - 1])
                 no +=1
-            load_file = input("\nChoose the name (type name) or the number of the file: ")
+            load_file = input("\nChoose the name of the file or type 'back': ")
             while not load_file in saves:
-                load_file = input("Choose the name (type name) or the number of the file correctly!\n")
-            self.load_game(load_file)
+                load_file = input("Choose the name of the file correctly!\n")
+            if load_file == 'back':
+                self.menu(current_state)
+            else:
+                self.load_game(load_file)
 
         elif (choice == '3' or choice == 'save') and state == 'pause':
-            file = input()
             self.save_game()
+
+        elif choice == 'info':
+            if state == 'main':
+                print("The following commands are available for you now: {}.".format(main_choices))
+            else:
+                print("The following commands are available for you now: {}.".format(pause_choices))
+            back = input("Type anything when you are ready...\n")
+            self.menu(current_state)
 
         else:
             check = input("Are you sure you want to quit? (y/n)\n")
             while not check.lower() in checks:
                 check = input("Choose the your answer correctly please.\n")
 
-            if check == 'y':
+            if check == 'y' or check == 'yes':
                 sys.exit()
-            elif state == 'pause':
-                self.menu('pause')
             else:
-                self.menu()
+                self.menu(current_state)
