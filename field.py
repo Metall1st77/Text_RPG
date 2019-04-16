@@ -16,7 +16,7 @@ class field():
     v_rows = 20
     v_cols = 30
 
-    def __init__(self, enemies = 0, biome = random.choice(biomes)):
+    def __init__(self, level = 1, enemies = 0, biome = random.choice(biomes)):
         for row in range(self.f_rows):
             self.full_field.append([])
             for col in range(self.f_cols):
