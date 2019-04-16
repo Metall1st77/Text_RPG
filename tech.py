@@ -9,7 +9,7 @@ class tech(creature):
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)
         self.ability = 'restore'
-        self.race = 'human'
+        self.race = 'tech'
         self.state = self.race
         self.armor += creature.much
         self.attack -= creature.standard
@@ -17,7 +17,8 @@ class tech(creature):
         self.max_health = self.health
         self.portrait += 'tech.txt'
 
-    def restore(self, hp):
+    def ability(self, hp):
+        # restore
         hp_ = hp
         for i in range(0, hp):
             if mana <= 0:
@@ -32,5 +33,5 @@ class tech(creature):
         print("{}\'s {} health was restored.".format(self.name, hp_))
 
     def info():
-        print("Tech has an ability to create mechanisms and restore an armor")
+        print("Tech has an ability to create mechanisms and restore health")
         print("Tech has much more armour but less attack and health")

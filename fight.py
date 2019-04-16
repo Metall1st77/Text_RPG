@@ -1,6 +1,6 @@
 class fight():
-    def __init__(self, file, character, enemy, init_by_character = True):
-        f = open(file, 'r')
+    def __init__(self, character, enemy, init_by_character = True):
+        f = open(enemy.portrait, 'r')
         for line in f:
             print(line, end='')
         if init_by_character:

@@ -15,7 +15,8 @@ class werewolf(creature):
         self.health -= creature.little
         self.portrait += 'werewolf.txt'
 
-    def transform(self):
+    def ability(self):
+        # transform
         if self.state == 'human':
             self.state = 'wolf'
             self.armor -= 2 * creature.standard

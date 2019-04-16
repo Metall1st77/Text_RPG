@@ -15,7 +15,8 @@ class treant(creature):
         self.real_health = self.health
         self.portrait += 'treant.txt'
 
-    def invulnerability(self):
+    def ability(self):
+        # invulnerability
         if self.state == 'treant':
             self.state = 'astral'
             self.health = math.inf

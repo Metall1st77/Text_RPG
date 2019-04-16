@@ -15,7 +15,8 @@ class demon(creature):
         self.souls = 0
         self.portrait += 'demon.txt'
 
-    def devour(self):
+    def ability(self):
+        # devour
         if self.souls <= 10:
             self.souls += 1
             print("{} got a new soul! ({} souls now)".format(self.name, self.souls))

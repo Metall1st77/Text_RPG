@@ -63,7 +63,7 @@ class main:
         cmd = input()
         cmd = re.sub(r'\s', ' ', cmd.lower())
         cmd = cmd.split()
-        while not cmd[0] in commands[status]:
+        while not cmd[0] in self.commands[status]:
             print("Wrong command. Type 'info' to see what you can do.\n")
             cmd = input()
             cmd = re.sub(r'\s', ' ', cmd.lower())
@@ -133,8 +133,13 @@ class main:
         # character.print_stats()
         return character
 
+    def show_stats(self, character):
+        clear_screen()
+        print(character)
+
     def start_game(self):
         self.character = self.create_character()
+        self.show_stats(self.character)
         print("game started")
         print("\n")
         self.command()

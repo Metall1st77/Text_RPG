@@ -64,6 +64,10 @@ class creature:
         self.mana = self.max_mana
         self.speed = self.standard_speed
         self.state = self.race
+        self.equipped = { 'weapon' : None,
+                         'armor'  : None,
+                         'boots'  : None }
+        self.inventory = [ None ]
         if self.sex == 'male':
             self.name = random.choice(self.male_names)
         else:
@@ -79,6 +83,25 @@ class creature:
 
         if other.item['weapon'] != None:
             other.item_strength['weapon'] -= random.randint(0, 4)
+
+    def __str__(self):
+        inv = ', '.join(map(str, self.inventory))
+        data = [ 'name :       ' + str(self.name),
+                 'race :       ' + str(self.race),
+                 'sex :        ' + str(self.sex),
+                 'level :      ' + str(self.level),
+                 'danger :     ' + str(self.danger),
+                 'attack :     ' + str(self.attack),
+                 'health :     ' + str(self.health),
+                 'armor :      ' + str(self.armor),
+                 'mana :       ' + str(self.mana),
+                 'speed :      ' + str(self.speed),
+                 'money :      ' + str(self.money),
+                 'equipped :   ' + str(self.equipped),
+                 'inventory :  ' + inv ]
+
+        data = '\n'.join(map(str, data))
+        return data
 
     def set_name(self, name, speech = False):
         name = name[0].upper() + name[1:].lower()
