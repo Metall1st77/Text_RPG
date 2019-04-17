@@ -46,7 +46,7 @@ class main:
 
     def __init__(self):
         # TODO: init function
-        self.menu('pause')
+        self.menu()
         return
 
     def clear_screen(self):
