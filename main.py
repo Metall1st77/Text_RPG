@@ -20,7 +20,7 @@ class main:
     max_progress = 10
     # TODO: commands
 
-    data = [ 'progress : ' + str(progress) ]
+    data = []
     file_saves = 'save_info.txt'
 
     level_enemy_count = [3, 4, 6, 8, 11, 15]
@@ -46,20 +46,20 @@ class main:
 
     def __init__(self):
         # TODO: init function
-        self.menu('pause')
+        self.menu()
         return
 
     def clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    # def loading(t = 1):
-    #     # clear_screen()
-    #     k = 0
-    #     print("Loading", end='')
-    #     while k < 3:
-    #         time.sleep(1)
-    #         print(".", end='')
-    #         k += 1
+    def loading(t = 1):
+        # clear_screen()
+        k = 0
+        print("Loading", end='')
+        while k < 3:
+            time.sleep(1)
+            print(".", end='')
+            k += 1
 
 
     def command(self, status = 'menu'):
@@ -72,7 +72,6 @@ class main:
             cmd = input()
             cmd = re.sub(r'\s', ' ', cmd.lower())
             cmd = cmd.split()
-        # TODO:
 
     def attack(self):
         # TODO: attack function
@@ -140,8 +139,10 @@ class main:
     def show_stats(self, character):
         self.clear_screen()
         print(character)
+        go = input("Type anything when you are ready...\n")
+        self.clear_screen()
 
-    def game(self):
+    def game(self, game_data = data):
         # TODO: GAME!
         return
 
@@ -156,18 +157,47 @@ class main:
         # TODO: starting game and a plot
         return
 
-    def load_game(self, load):
-        print("game loading")
-        # TODO: game Loading
-        return
-
     def continue_game(self):
         print("game continues")
         # TODO: come up with continueing (using progress bar maybe...)
         sys.exit()
 
+    def load_game(self, menu_state):
+        file = open(self.file_saves, 'r')
+        no = 1
+        saves = ['back', 'delete']
+
+        if no == 1:
+            print("There are no any saves!")
+            input("Type anything when you are ready...\n")
+            self.menu(menu_state)
+
+        print("The following saves are available to you:\n")
+
+        for load_no in file:
+            print('{}. {}'.format(no, load_no), end='')
+            saves.append(load_no[:len(load_no) - 1])
+            no +=1
+
+        load_file = input("\nChoose the name of the file, type 'back' to go back to menu or type 'delete' to remove your saving: ")
+        while not load_file in saves:
+            load_file = input("Choose the name of the file correctly!\n")
+
+        if load_file.lower() == 'back':
+            self.menu(menu_state)
+        elif load_file.lower() == 'delete':
+                self.delete_saving(menu_state)
+                self.menu(menu_state)
+        else:
+            load_file = 'saves/' + load_file + '.txt'
+            load_file = open(load_file, 'r')
+            self.data = [line.strip() for line in load_file]
+            self.game(self.data)
+            # TODO: loading from file 'load_file'
+
+        return
+
     def save_game(self):
-        self.clear_screen()
         checks = ('y', 'n', 'yes', 'no')
 
         save = input("Type the name of the file for saving: ")
@@ -193,7 +223,7 @@ class main:
         file = open(self.file_saves, 'w')
         for i in range(len(d)):
             file.write(d[i] + '\n')
-        file.write(save)
+        file.write(save + '\n')
         file.close()
 
         save_name = 'saves/' + save + '.txt'
@@ -204,6 +234,40 @@ class main:
 
         # TODO: come up with saving
         sys.exit()
+
+    def delete_saving(self, menu_state, delete = None):
+        dir = 'saves/'
+        ending = '.txt'
+        if delete == None:
+            file = open(self.file_saves, 'r')
+            saves = [ 'back' ]
+            for load_no in file:
+                saves.append(load_no[:len(load_no) - 1])
+            file.close()
+
+            delete = input("Type the name of the file for removing or 'back' to go back to menu: ")
+            while not delete in saves:
+                delete = input("Type the name of the file for removing or 'back' to go back to menu correctly!\n")
+            if delete.lower() == 'back':
+                self.menu(menu_state)
+            else:
+                file = open(self.file_saves, 'r')
+                d = [line.strip() for line in file]
+                file.close()
+
+                file = open(self.file_saves, 'w')
+                for i in range(len(d)):
+                    if d[i] == delete:
+                        continue
+                    file.write(d[i] + '\n')
+                file.close()
+
+                try:
+                    os.remove(dir + delete + ending)
+                except:
+                    print("Something went wrong!")
+                    sys.exit()
+                print("Save has been removed!")
 
     def progress_bar(self):
         ratio = self.progress // self.max_progress
@@ -216,8 +280,7 @@ class main:
 
     def menu(self, state = 'main'):
         self.clear_screen()
-        current_state = state
-        choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit', 'info')
+        choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit')
         checks = ('y', 'n', 'yes', 'no')
 
         main_choices = ('start', 'load', 'quit')
@@ -236,10 +299,16 @@ class main:
             print('{}'.format('3. Quit'))
 
         print('\n\nYour progress bar: {}'.format(self.progress_bar()))
-        choice = input("Choose the number of your choice or type 'info' please.\n")
+        choice = input("\nChoose the number of an option please.\n")
         while not choice.lower() in choices:
-            choice = input("Choose the number of your choice or type 'info' please.\n")
+            choice = input("Choose the number an option or type 'info'/'help' please.\n")
             choice = choice.lower()
+            if choice == 'info' or choice == 'help':
+                if state == 'main':
+                    print("The following commands are available for you now: {}.".format(main_choices))
+                else:
+                    print("The following commands are available for you now: {}.".format(pause_choices))
+
         if (choice == '1' or choice == 'start') and state == 'main':
             self.clear_screen()
             self.start_game()
@@ -250,33 +319,11 @@ class main:
 
         elif choice == '2' or choice == 'load':
             self.clear_screen()
-            print("\nThe following saves are available to you:\n")
-            file = open(self.file_saves, 'r')
-
-            no = 1
-            saves = ['back']
-            for load_no in file:
-                print('{}. {}'.format(no, load_no), end='')
-                saves.append(load_no[:len(load_no) - 1])
-                no +=1
-            load_file = input("\nChoose the name of the file or type 'back': ")
-            while not load_file in saves:
-                load_file = input("Choose the name of the file correctly!\n")
-            if load_file == 'back':
-                self.menu(current_state)
-            else:
-                self.load_game(load_file)
+            self.load_game(state)
 
         elif (choice == '3' or choice == 'save') and state == 'pause':
+            self.clear_screen()
             self.save_game()
-
-        elif choice == 'info':
-            if state == 'main':
-                print("The following commands are available for you now: {}.".format(main_choices))
-            else:
-                print("The following commands are available for you now: {}.".format(pause_choices))
-            back = input("Type anything when you are ready...\n")
-            self.menu(current_state)
 
         else:
             check = input("Are you sure you want to quit? (y/n)\n")
@@ -286,4 +333,4 @@ class main:
             if check == 'y' or check == 'yes':
                 sys.exit()
             else:
-                self.menu(current_state)
+                self.menu(state)
