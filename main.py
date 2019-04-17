@@ -46,7 +46,7 @@ class main:
 
     def __init__(self):
         # TODO: init function
-        self.menu()
+        self.menu('pause')
         return
 
     def clear_screen(self):
@@ -197,10 +197,14 @@ class main:
 
         return
 
-    def save_game(self):
+    def save_game(self, menu_state):
         checks = ('y', 'n', 'yes', 'no')
 
-        save = input("Type the name of the file for saving: ")
+        save = input("Type the name of the file for saving or type 'back' to go to the menu: ")
+        save = re.sub(r'\s', '', save.lower())
+        if save == 'back':
+            self.menu(menu_state)
+
         file = open(self.file_saves, 'r')
         saves = []
         for load_no in file:
@@ -222,7 +226,8 @@ class main:
 
         file = open(self.file_saves, 'w')
         for i in range(len(d)):
-            file.write(d[i] + '\n')
+            if save != d[i]:
+                file.write(d[i] + '\n')
         file.write(save + '\n')
         file.close()
 
@@ -323,7 +328,7 @@ class main:
 
         elif (choice == '3' or choice == 'save') and state == 'pause':
             self.clear_screen()
-            self.save_game()
+            self.save_game(state)
 
         else:
             check = input("Are you sure you want to quit? (y/n)\n")
