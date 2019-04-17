@@ -1,4 +1,4 @@
-from creature import creature
+from creatures.creature import creature
 
 class human(creature):
     # human has much money on the beginning;

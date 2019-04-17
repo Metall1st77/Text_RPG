@@ -5,12 +5,12 @@ import time
 import re
 import os
 
-from creature import creature
-from human import human
-from werewolf import werewolf
-from treant import treant
-from tech import tech
-from demon import demon
+from creatures.creature import creature
+from creatures.human import human
+from creatures.werewolf import werewolf
+from creatures.treant import treant
+from creatures.tech import tech
+from creatures.demon import demon
 
 from field import field
 from fight import fight

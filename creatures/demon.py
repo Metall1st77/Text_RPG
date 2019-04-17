@@ -1,4 +1,4 @@
-from creature import creature
+from creatures.creature import creature
 
 class demon(creature):
     # demon has an ability to eat souls

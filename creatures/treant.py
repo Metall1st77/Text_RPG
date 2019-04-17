@@ -1,4 +1,4 @@
-from creature import creature
+from creatures.creature import creature
 
 class treant(creature):
     # treant has an ability to enter a tree astral and get invulnerability
