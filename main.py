@@ -46,7 +46,8 @@ class main:
 
     def __init__(self):
         # TODO: init function
-        self.menu()
+        self.character = self.create_character()
+        self.menu('pause')
         return
 
     def clear_screen(self):
@@ -234,7 +235,7 @@ class main:
         save_name = 'saves/' + save + '.txt'
         s = open(save_name, 'w')
         # s.write(self.data)
-        # s.write(self.character)
+        s.write(str(self.character))
         s.close()
 
         # TODO: come up with saving
