@@ -6,29 +6,31 @@ import re
 import os
 
 from creatures.creature import creature
-from creatures.human import human
+from creatures.human    import human
 from creatures.werewolf import werewolf
-from creatures.treant import treant
-from creatures.tech import tech
-from creatures.demon import demon
+from creatures.treant   import treant
+from creatures.tech     import tech
+from creatures.demon    import demon
 
 from field import field
 from fight import fight
 
-class main:
+from cmd import Cmd
+
+class main(Cmd):
     progress = 0
     max_progress = 10
-    # TODO: commands
 
     data = []
     file_saves = 'save_info.txt'
 
-    level_enemy_count = [3, 4, 6, 8, 11, 15]
-
-    directions = ( ('left',  'a'),
-                   ('right', 'd'),
-                   ('up',    'w'),
-                   ('down',  's') )
+    # commands = { 'menu'     : ('continue', 'new', 'load'),
+    #              'pause'    : ('continue', 'restart', 'save', 'load'),
+    #              'fight'    : ('attack', 'defend', 'retire', 'payoff'),
+    #              'walk'     : ('go', 'move'),
+    #              'shop'     : ('buy', 'sell'),
+    #              'anywhere' : ('pause', 'quit'),
+    #              'free'     : ('equip', 'unequip') }
 
     weapons = ('sword', 'knife')
     armors  = ('chainmail', 'platemail')
@@ -36,18 +38,9 @@ class main:
 
     items = ( weapons, armors, boots )
 
-    commands = { 'menu'     : ('continue', 'new', 'load'),
-                 'pause'    : ('continue', 'restart', 'save', 'load'),
-                 'fight'    : ('attack', 'defend', 'retire', 'payoff'),
-                 'walk'     : ('go', 'move'),
-                 'shop'     : ('buy', 'sell'),
-                 'anywhere' : ('pause', 'quit'),
-                 'free'     : ('equip', 'unequip') }
-
     def __init__(self):
         # TODO: init function
-        self.character = self.create_character()
-        self.menu('pause')
+        self.menu()
         return
 
     def clear_screen(self):
@@ -61,30 +54,6 @@ class main:
             time.sleep(1)
             print(".", end='')
             k += 1
-
-
-    def command(self, status = 'menu'):
-        # status may have values: 'menu', 'pause', 'fight', 'walk', 'shop' and 'free'
-        cmd = input()
-        cmd = re.sub(r'\s', ' ', cmd.lower())
-        cmd = cmd.split()
-        while not cmd[0] in self.commands[status]:
-            print("Wrong command. Type 'info' to see what you can do.\n")
-            cmd = input()
-            cmd = re.sub(r'\s', ' ', cmd.lower())
-            cmd = cmd.split()
-
-    def attack(self):
-        # TODO: attack function
-        return
-
-    def defend(self):
-        # TODO: defend function
-        return
-
-    def move(self, direction):
-        # TODO: move function
-        return
 
     def create_character(self):
         level = 0
@@ -150,12 +119,16 @@ class main:
     def start_game(self):
         self.character = self.create_character()
         self.show_stats(self.character)
-        Field = field(self.character, enemies = self.level_enemy_count[0])
+        Field = field(self.character)
         # Main loop
         self.game()
         print("game started")
         print("\n")
         # TODO: starting game and a plot
+        return
+
+    def reload_screen(self):
+        print("screen reloaded")
         return
 
     def continue_game(self):
@@ -165,20 +138,26 @@ class main:
 
     def load_game(self, menu_state):
         file = open(self.file_saves, 'r')
-        no = 1
+        no = 0
+        for line in file:
+            no += 1
         saves = ['back', 'delete']
+        file.close()
 
-        if no == 1:
+        if no == 0:
             print("There are no any saves!")
             input("Type anything when you are ready...\n")
             self.menu(menu_state)
 
         print("The following saves are available to you:\n")
 
+        no = 1
+        file = open(self.file_saves, 'r')
         for load_no in file:
             print('{}. {}'.format(no, load_no), end='')
             saves.append(load_no[:len(load_no) - 1])
-            no +=1
+            no += 1
+        file.close()
 
         load_file = input("\nChoose the name of the file, type 'back' to go back to menu or type 'delete' to remove your saving: ")
         while not load_file in saves:
@@ -246,16 +225,29 @@ class main:
         ending = '.txt'
         if delete == None:
             file = open(self.file_saves, 'r')
-            saves = [ 'back' ]
+            saves = [ 'back', 'all' ]
             for load_no in file:
                 saves.append(load_no[:len(load_no) - 1])
             file.close()
 
-            delete = input("Type the name of the file for removing or 'back' to go back to menu: ")
+            delete = input("Type the name of the file for removing (type 'all' to delete everything) or 'back' to go back to menu: ")
             while not delete in saves:
-                delete = input("Type the name of the file for removing or 'back' to go back to menu correctly!\n")
+                delete = input("Type the name of the file for removing (type 'all' to delete everything) or 'back' to go back to menu correctly!\n")
             if delete.lower() == 'back':
                 self.menu(menu_state)
+            elif delete.lower() == 'all':
+                file = open(self.file_saves, 'w')
+                file.close()
+
+                try:
+                    saves = saves[2:]
+                    for file in saves:
+                        os.remove(dir + file + ending)
+                except:
+                    print("Something went wrong!")
+                    sys.exit()
+                print("All saves have been removed!")
+
             else:
                 file = open(self.file_saves, 'r')
                 d = [line.strip() for line in file]
@@ -285,6 +277,7 @@ class main:
         return bar
 
     def menu(self, state = 'main'):
+        self.status = state
         self.clear_screen()
         choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit')
         checks = ('y', 'n', 'yes', 'no')
@@ -340,3 +333,23 @@ class main:
                 sys.exit()
             else:
                 self.menu(state)
+
+    def __str__(self):
+        data = [  ]
+
+
+    # Here comes Cmd module commands!
+
+
+    def do_quit(self, anything):
+        check = input("Are you sure you want to quit? (y/n)\n")
+        if check.lower() == 'y' or check.lower() == 'yes':
+            return True
+        else:
+            self.reload_screen()
+
+    def do_pause(self, anything):
+        if self.status != 'pause' or self.status != 'main':
+            self.menu('pause')
+        else:
+            print("The game is already on pause or in main menu!")

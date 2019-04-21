@@ -86,19 +86,19 @@ class creature:
 
     def __str__(self):
         inv = ', '.join(map(str, self.inventory))
-        data = [ 'name :       ' + str(self.name),
-                 'race :       ' + str(self.race),
-                 'sex :        ' + str(self.sex),
-                 'level :      ' + str(self.level),
-                 'danger :     ' + str(self.danger),
-                 'attack :     ' + str(self.attack),
-                 'health :     ' + str(self.health),
-                 'armor :      ' + str(self.armor),
-                 'mana :       ' + str(self.mana),
-                 'speed :      ' + str(self.speed),
-                 'money :      ' + str(self.money),
-                 'equipped :   ' + str(self.equipped),
-                 'inventory :  ' + inv ]
+        data = [ 'name :      ' + str(self.name),
+                 'race :      ' + str(self.race),
+                 'sex :       ' + str(self.sex),
+                 'level :     ' + str(self.level),
+                 'danger :    ' + str(self.danger),
+                 'attack :    ' + str(self.attack),
+                 'health :    ' + str(self.health),
+                 'armor :     ' + str(self.armor),
+                 'mana :      ' + str(self.mana),
+                 'speed :     ' + str(self.speed),
+                 'money :     ' + str(self.money),
+                 'equipped :  ' + str(self.equipped),
+                 'inventory : ' + inv ]
 
         data = '\n'.join(map(str, data))
         return data
