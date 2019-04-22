@@ -17,7 +17,7 @@ from fight import fight
 
 from cmd import Cmd
 
-class main(Cmd):
+class main:
     progress = 0
     max_progress = 10
 
@@ -40,6 +40,7 @@ class main(Cmd):
 
     def __init__(self):
         # TODO: init function
+        self.Shell = shell()
         self.menu()
         return
 
@@ -99,9 +100,10 @@ class main(Cmd):
         elif race == 'werewolf':
             character = werewolf(sex, race, level, danger, attack, health, armor, job)
 
-        name = input("Choose your name or get it by random (Type 'random'): ")
+        name = input("Choose your name or get it by random (Type 'random' or nothing): ")
         name = re.sub(r'\s', '', name.lower())
-        if name != 'random':
+        name += ' '
+        if name != 'random' or name != ' \n':
             character.set_name(name)
         # character.print_stats()
         return character
@@ -120,8 +122,10 @@ class main(Cmd):
         self.character = self.create_character()
         self.show_stats(self.character)
         Field = field(self.character)
+        self.Shell.cmdloop()
         # Main loop
         self.game()
+
         print("game started")
         print("\n")
         # TODO: starting game and a plot
@@ -277,7 +281,7 @@ class main(Cmd):
         return bar
 
     def menu(self, state = 'main'):
-        self.status = state
+        shell.status = state
         self.clear_screen()
         choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit')
         checks = ('y', 'n', 'yes', 'no')
@@ -340,16 +344,23 @@ class main(Cmd):
 
     # Here comes Cmd module commands!
 
+class shell(Cmd):
+    prompt = 'cmd>> '
+    intro = 'Hi there!'
+
+    status = None
 
     def do_quit(self, anything):
         check = input("Are you sure you want to quit? (y/n)\n")
         if check.lower() == 'y' or check.lower() == 'yes':
             return True
-        else:
-            self.reload_screen()
+    do_EOF = do_quit
 
     def do_pause(self, anything):
         if self.status != 'pause' or self.status != 'main':
-            self.menu('pause')
+            main().menu('pause')
         else:
             print("The game is already on pause or in main menu!")
+
+    def do_go(self, arg):
+        print("You walked {} steps to the {}".format(len, dir))
