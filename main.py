@@ -15,8 +15,6 @@ from creatures.demon    import demon
 from field import field
 from fight import fight
 
-from cmd import Cmd
-
 class main:
     progress = 0
     max_progress = 10
@@ -41,6 +39,9 @@ class main:
     def __init__(self):
         # TODO: init function
         self.Shell = shell()
+        self.Shell.define()
+        # self.character = self.create_character()
+        # self.menu('pause')
         self.menu()
         return
 
@@ -116,13 +117,12 @@ class main:
 
     def game(self, game_data = data):
         # TODO: GAME!
-        return
+        self.clear_screen()
 
     def start_game(self):
         self.character = self.create_character()
         self.show_stats(self.character)
         Field = field(self.character)
-        self.Shell.cmdloop()
         # Main loop
         self.game()
 
@@ -176,50 +176,52 @@ class main:
             load_file = 'saves/' + load_file + '.txt'
             load_file = open(load_file, 'r')
             self.data = [line.strip() for line in load_file]
-            self.game(self.data)
-            # TODO: loading from file 'load_file'
+            # self.game(self.data)
+            self.game()
 
         return
 
     def save_game(self, menu_state):
         checks = ('y', 'n', 'yes', 'no')
+        try:
+            save = input("Type the name of the file for saving or type 'back' to go to the menu: ")
+            save = re.sub(r'\s', '', save.lower())
+            if save == 'back':
+                self.menu(menu_state)
 
-        save = input("Type the name of the file for saving or type 'back' to go to the menu: ")
-        save = re.sub(r'\s', '', save.lower())
-        if save == 'back':
-            self.menu(menu_state)
+            file = open(self.file_saves, 'r')
+            saves = []
+            for load_no in file:
+                saves.append(load_no[:len(load_no) - 1])
+            file.close()
 
-        file = open(self.file_saves, 'r')
-        saves = []
-        for load_no in file:
-            saves.append(load_no[:len(load_no) - 1])
-        file.close()
+            while save in saves:
+                check = input("This name is already in use. Are you sure you want to overwrite the save? (Type y/n)\n")
+                while not check in checks:
+                    check = input("Type 'y' or 'n' please.\n")
+                if check[0] == 'n':
+                    self.save_game()
+                else:
+                    break
 
-        while save in saves:
-            check = input("This name is already in use. Are you sure you want to overwrite the save? (Type y/n)\n")
-            while not check in checks:
-                check = input("Type 'y' or 'n' please.\n")
-            if check[0] == 'n':
-                self.save_game()
-            else:
-                break
+            file = open(self.file_saves, 'r')
+            d = [line.strip() for line in file]
+            file.close()
 
-        file = open(self.file_saves, 'r')
-        d = [line.strip() for line in file]
-        file.close()
+            file = open(self.file_saves, 'w')
+            for i in range(len(d)):
+                if save != d[i]:
+                    file.write(d[i] + '\n')
+            file.write(save + '\n')
+            file.close()
 
-        file = open(self.file_saves, 'w')
-        for i in range(len(d)):
-            if save != d[i]:
-                file.write(d[i] + '\n')
-        file.write(save + '\n')
-        file.close()
-
-        save_name = 'saves/' + save + '.txt'
-        s = open(save_name, 'w')
-        # s.write(self.data)
-        s.write(str(self.character))
-        s.close()
+            save_name = 'saves/' + save + '.txt'
+            s = open(save_name, 'w')
+            # s.write(self.data)
+            s.write(str(self.character))
+            s.close()
+        except:
+            print("*** Some error was accured!")
 
         # TODO: come up with saving
         sys.exit()
@@ -281,7 +283,7 @@ class main:
         return bar
 
     def menu(self, state = 'main'):
-        shell.status = state
+        Shell.status = state
         self.clear_screen()
         choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit')
         checks = ('y', 'n', 'yes', 'no')
@@ -340,27 +342,87 @@ class main:
 
     def __str__(self):
         data = [  ]
+        return data
+
+    def move(self, dir, steps):
+        print("You walked {} steps {}".format(steps, dir))
 
 
-    # Here comes Cmd module commands!
 
-class shell(Cmd):
+# Here comes Cmd module commands!
+
+class shell:
     prompt = 'cmd>> '
-    intro = 'Hi there!'
+    error = '*** '
 
     status = None
+    in_game = False
+    in_shop = False
 
-    def do_quit(self, anything):
-        check = input("Are you sure you want to quit? (y/n)\n")
-        if check.lower() == 'y' or check.lower() == 'yes':
-            return True
-    do_EOF = do_quit
+    directions = ( 'left', 'right', 'up', 'down' )
 
-    def do_pause(self, anything):
-        if self.status != 'pause' or self.status != 'main':
-            main().menu('pause')
-        else:
-            print("The game is already on pause or in main menu!")
+    info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\nSyntax: <continue>\n",
+                      'new' : "Starts a new game.\nSyntax: <new>\n",
+                      'save' : "Saves current game session.\nSyntax: <save> <name=>\n",
+                      'load' : "Loads a game from your saves.\nSyntax: <load> <name=>\n",
+                      'show' : "Shows the statistics of anything you want to know.\nSyntax: <show> <stats/log/saves>\nstats: statistics of your character\nlog: statistics of the ingame data\nsaves: names of files you can load.\n",
+                      'attack' : "Calling your character to attack the nearest enemy.\nSyntax: <attack> <dir=>\ndir: direction ({}).\n".format(directions),
+                      'defend' : "Calling your character to defend from the enemy.\nSyntax: <defend>\n",
+                      'retire' : "Calling your character to retire from the battle. The enemy won't be defeated.\nSyntax: <retire>\n",
+                      'payoff' : "Calling your character to pay off from your enemy. The enemy will be considered as defeated.\nSyntax: <payoff> <cost=>\ncost: amount of money you are going to pay.\n",
+                      'go' : "Calling your character to move to the specified place.\nSyntax: <go> <dir=> <steps=>\ndir: direction ({}).\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
+                      'move' : "The same as <go>.\nSyntax: <move> <dir=> <steps=>\ndir: direction ({}).\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
+                      'buy' : "Allows you to buy an item from the list of available.\nSyntax: <buy> <item=>\n",
+                      'sell' : "Allows you to sell an item from your inventory.\nSyntax: <sell> <item=>\n",
+                      'use' : "Allow you to use an item from your inventory.\nSyntax: <use> <item=>\n",
+                      'equip' : "Equips an item from your inventory (only if the slot is empty).\nSyntax: <equip> <item=>\n",
+                      'unequip' : "Unequips an item and puts it to your inventory.\nSyntax: <unequip> <item=>" }
 
-    def do_go(self, arg):
-        print("You walked {} steps to the {}".format(len, dir))
+# TODO: Make info look normal...
+
+    cmd_list = ( 'continue', 'new', 'save', 'load', 'attack', 'defend', 'retire',
+                 'payoff', 'go', 'move', 'buy', 'sell', 'pause', 'quit', 'equip',
+                 'unequip', 'show', 'use', 'help', 'info' )
+
+    in_game_list = ( 'attack', 'defend', 'retire', 'payoff', 'go', 'move', 'buy',
+                     'sell', 'equip', 'unequip')
+
+    def define(self):
+        correct = False
+        while not correct:
+            cmd = input(self.prompt)
+            cmd = cmd.lower()
+            cmd = cmd.split()
+            try:
+                main_cmd = cmd[0]
+                if not main_cmd in self.cmd_list:
+                    print("{} Incorrect command. Type 'help' or 'info' to see the command list.".format(self.error))
+                else:
+                    if (main_cmd == 'help' or main_cmd == 'info') and len(cmd) == 1:
+                        print("Command list:\n{}\n".format(str(self.info_cmd_list)))
+                    elif main_cmd in self.in_game_list and not in_game:
+                        print("{} This command is unavailable right now.".format(self.error))
+            except:
+                print("{} Incorrect command. Type 'help' or 'info' to see the command list.".format(self.error))
+
+    def go(self, cmd):
+        arg = arg.lower()
+        moving = arg.split()
+        directions = ('left', 'right', 'up', 'down')
+        if len(moving) != 2:
+            print("{} Wrong command. Expected direction and quantity of steps.".format(self.error))
+            self.define()
+
+        dir = moving[0]
+        steps = moving[1]
+        if not moving[0] in directions:
+            print("{} Wrong direction. Expected 'left', 'right', 'up' or 'down'.".format(self.error))
+            self.define()
+
+        try:
+            steps = int(steps)
+            dir = str(dir)
+            main().move(dir, steps)
+        except:
+            print("{} Wrong quantity of steps. Expected an integer number of steps.".format(self.error))
+            self.define()
