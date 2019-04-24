@@ -361,22 +361,22 @@ class shell:
 
     directions = ( 'left', 'right', 'up', 'down' )
 
-    info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\nSyntax: <continue>\n",
-                      'new' : "Starts a new game.\nSyntax: <new>\n",
-                      'save' : "Saves current game session.\nSyntax: <save> <name=>\n",
-                      'load' : "Loads a game from your saves.\nSyntax: <load> <name=>\n",
-                      'show' : "Shows the statistics of anything you want to know.\nSyntax: <show> <stats/log/saves>\nstats: statistics of your character\nlog: statistics of the ingame data\nsaves: names of files you can load.\n",
-                      'attack' : "Calling your character to attack the nearest enemy.\nSyntax: <attack> <dir=>\ndir: direction ({}).\n".format(directions),
-                      'defend' : "Calling your character to defend from the enemy.\nSyntax: <defend>\n",
-                      'retire' : "Calling your character to retire from the battle. The enemy won't be defeated.\nSyntax: <retire>\n",
-                      'payoff' : "Calling your character to pay off from your enemy. The enemy will be considered as defeated.\nSyntax: <payoff> <cost=>\ncost: amount of money you are going to pay.\n",
-                      'go' : "Calling your character to move to the specified place.\nSyntax: <go> <dir=> <steps=>\ndir: direction ({}).\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
-                      'move' : "The same as <go>.\nSyntax: <move> <dir=> <steps=>\ndir: direction ({}).\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
-                      'buy' : "Allows you to buy an item from the list of available.\nSyntax: <buy> <item=>\n",
-                      'sell' : "Allows you to sell an item from your inventory.\nSyntax: <sell> <item=>\n",
-                      'use' : "Allow you to use an item from your inventory.\nSyntax: <use> <item=>\n",
-                      'equip' : "Equips an item from your inventory (only if the slot is empty).\nSyntax: <equip> <item=>\n",
-                      'unequip' : "Unequips an item and puts it to your inventory.\nSyntax: <unequip> <item=>" }
+    info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\n\nSyntax: <continue>\n",
+                      'new' : "Starts a new game.\n\nSyntax: <new>\n",
+                      'save' : "Saves current game session.\n\nSyntax: <save> <name=>\n",
+                      'load' : "Loads a game from your saves.\n\nSyntax: <load> <name=>\n",
+                      'show' : "Shows the statistics of anything you want to know.\n\nSyntax: <show> <stats>/<log>/<saves>\n\nstats: statistics of your character\nlog: statistics of the ingame data\nsaves: names of files you can load.\n",
+                      'attack' : "Calling your character to attack the nearest enemy.\n\nSyntax: <attack> <dir=>\n\ndir: direction ({}).\n".format(directions),
+                      'defend' : "Calling your character to defend from the enemy.\n\nSyntax: <defend>\n",
+                      'retire' : "Calling your character to retire from the battle. The enemy won't be defeated.\n\nSyntax: <retire>\n",
+                      'payoff' : "Calling your character to pay off from your enemy. The enemy will be considered as defeated.\n\nSyntax: <payoff> <cost=>\n\ncost: amount of money you are going to pay.\n",
+                      'go' : "Calling your character to move to the specified place.\n\nSyntax: <go> <dir=> <steps=>\n\ndir: direction {}.\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
+                      'move' : "The same as <go>.\n\nSyntax: <move> <dir=> <steps=>\n\ndir: direction {}.\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
+                      'buy' : "Allows you to buy an item from the list of available.\n\nSyntax: <buy> <item=>\n",
+                      'sell' : "Allows you to sell an item from your inventory.\n\nSyntax: <sell> <item=>\n",
+                      'use' : "Allow you to use an item from your inventory.\n\nSyntax: <use> <item=>\n",
+                      'equip' : "Equips an item from your inventory (only if the slot is empty).\n\nSyntax: <equip> <item=>\n",
+                      'unequip' : "Unequips an item and puts it to your inventory.\n\nSyntax: <unequip> <item=>\n" }
 
 # TODO: Make info look normal...
 
@@ -399,9 +399,15 @@ class shell:
                     print("{} Incorrect command. Type 'help' or 'info' to see the command list.".format(self.error))
                 else:
                     if (main_cmd == 'help' or main_cmd == 'info') and len(cmd) == 1:
-                        print("Command list:\n{}\n".format(str(self.info_cmd_list)))
+                        print("\nCommand list:\n", end='{:+^80}'.format('+'))
+                        for key in self.info_cmd_list.keys():
+                            print(str(key), end=': ')
+                            print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
+
                     elif main_cmd in self.in_game_list and not in_game:
                         print("{} This command is unavailable right now.".format(self.error))
+                    else:
+                        print('# TODO: ')
             except:
                 print("{} Incorrect command. Type 'help' or 'info' to see the command list.".format(self.error))
 
