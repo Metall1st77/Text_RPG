@@ -356,8 +356,6 @@ class shell:
     error = '*** '
 
     status = None
-    in_game = False
-    in_shop = False
 
     directions = ( 'left', 'right', 'up', 'down' )
 
@@ -378,14 +376,21 @@ class shell:
                       'equip' : "Equips an item from your inventory (only if the slot is empty).\n\nSyntax: <equip> <item=>\n",
                       'unequip' : "Unequips an item and puts it to your inventory.\n\nSyntax: <unequip> <item=>\n" }
 
-# TODO: Make info look normal...
 
     cmd_list = ( 'continue', 'new', 'save', 'load', 'attack', 'defend', 'retire',
                  'payoff', 'go', 'move', 'buy', 'sell', 'pause', 'quit', 'equip',
                  'unequip', 'show', 'use', 'help', 'info' )
 
-    in_game_list = ( 'attack', 'defend', 'retire', 'payoff', 'go', 'move', 'buy',
-                     'sell', 'equip', 'unequip')
+    on_field_list = ( 'pause', 'use', 'save', 'attack', 'defend', 'go', 'move', 'equip', 'unequip')
+
+    fight_list = ( 'pause', 'use', 'retire', 'payoff' )
+
+    menu_list = ( 'continue', 'new', 'load' )
+    pause_list = ( 'continue', 'load', 'save' )
+
+    shop_list = ( 'pause', 'buy', 'sell' )
+
+    anywhere = ( 'help', 'info', 'quit'  )
 
     def define(self):
         correct = False
@@ -404,7 +409,12 @@ class shell:
                             print(str(key), end=': ')
                             print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
 
-                    elif main_cmd in self.in_game_list and not in_game:
+                    elif (main_cmd in self.fight_list and status != 'fight') or
+                    (main_cmd in self.menu_list and  status != 'main') or
+                    (main_cmd in self.pause_list and status != 'pause') or
+                    (main_cmd in self.on_field_list and status != 'moving') or
+                    (main_cmd in self.shop_list and status != 'shop') or
+                    (not main_cmd in self.anywhere):
                         print("{} This command is unavailable right now.".format(self.error))
                     else:
                         print('# TODO: ')
