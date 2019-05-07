@@ -401,36 +401,48 @@ class shell:
         correct = False
         while not correct:
             cmd = input(self.prompt)
-            cmd = cmd.lower()
-            cmd = cmd.split()
-            try:
-                main_cmd = cmd[0]
+            cmd = self.parse(cmd)
+            if not cmd:
+                continue
 
-                if not main_cmd in self.cmd_list:
-                    print("{} Incorrect command (#1). Type 'help' or 'info' to see the command list.".format(self.error))
-                    continue
+            main_cmd = cmd[0]
 
-                if (main_cmd == 'help' or main_cmd == 'info') and len(cmd) == 1:
-                    print("\nCommand list:\n", end='{:+^80}'.format('+'))
-                    for key in self.info_cmd_list.keys():
-                        print(str(key), end=': ')
-                        print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
-                elif main_cmd in self.fight_list and self.status == 'fight':
-                    print(self.status)
-                elif main_cmd in self.menu_list and self.status == 'main':
-                    print(self.status)
-                elif main_cmd in self.pause_list and self.status == 'pause':
-                    print(self.status)
-                elif main_cmd in self.on_field_list and self.status == 'moving':
-                    print(self.status)
-                elif main_cmd in self.shop_list and self.status == 'shop':
-                    print(self.status)
-                elif main_cmd in self.anywhere:
-                    print('anywhere')
-                else:
-                    print("{} This command is unavailable right now.".format(self.error))
-            except:
-                print("{} Incorrect command (#2). Type 'help' or 'info' to see the command list.".format(self.error))
+            if main_cmd in self.fight_list and self.status == 'fight':
+                print(self.status)
+            elif main_cmd in self.menu_list and self.status == 'main':
+                print(self.status)
+            elif main_cmd in self.pause_list and self.status == 'pause':
+                print(self.status)
+            elif main_cmd in self.on_field_list and self.status == 'moving':
+                print(self.status)
+            elif main_cmd in self.shop_list and self.status == 'shop':
+                print(self.status)
+            elif main_cmd in self.anywhere:
+                print('anywhere')
+            else:
+                print("{} This command is unavailable right now.".format(self.error))
+
+    def parse(self, cmd):
+        cmd = cmd.lower()
+        cmd = cmd.split()
+        try:
+            cmd_check = cmd[0]
+            if not cmd_check in self.cmd_list:
+                print("{} Incorrect command (#1). Type 'help' or 'info' to see the command list.".format(self.error))
+                return False
+            elif (cmd_check == 'help' or cmd_check == 'info') and len(cmd) == 1:
+                print("\nCommand list:\n", end='{:+^80}'.format('+'))
+                for key in self.info_cmd_list.keys():
+                    print(str(key), end=': ')
+                    print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
+                return False
+            else:
+                return cmd
+        except:
+            print("{} Incorrect command (#2). Type 'help' or 'info' to see the command list.".format(self.error))
+            return False
+
+
 
     def go(self, cmd):
         arg = arg.lower()
