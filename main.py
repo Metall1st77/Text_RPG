@@ -15,20 +15,17 @@ from creatures.demon    import demon
 from field import field
 from fight import fight
 
+from logger import logger
+
 class main:
+    session_name = 'session.txt'
+    session = logger(session_name)
+
     progress = 0
     max_progress = 10
 
     data = []
     file_saves = 'save_info.txt'
-
-    # commands = { 'menu'     : ('continue', 'new', 'load'),
-    #              'pause'    : ('continue', 'restart', 'save', 'load'),
-    #              'fight'    : ('attack', 'defend', 'retire', 'payoff'),
-    #              'walk'     : ('go', 'move'),
-    #              'shop'     : ('buy', 'sell'),
-    #              'anywhere' : ('pause', 'quit'),
-    #              'free'     : ('equip', 'unequip') }
 
     weapons = ('sword', 'knife')
     armors  = ('chainmail', 'platemail')
@@ -131,13 +128,24 @@ class main:
         # TODO: starting game and a plot
         return
 
-    def reload_screen(self):
-        print("screen reloaded")
-        return
+    def load_screen(self):
+        temp = session
+        session.close()
+
+        load = open(session_name, 'r')
+        for line in load:
+            if line != '\n':
+                print(line, end='')
+        load.close()
+
+        session = temp
+        temp.close()
+
 
     def continue_game(self):
         print("game continues")
         # TODO: come up with continueing (using progress bar maybe...)
+        session.close()
         sys.exit()
 
     def load_game(self, menu_state):
@@ -224,6 +232,7 @@ class main:
             print("*** Some error was accured!")
 
         # TODO: come up with saving
+        session.close()
         sys.exit()
 
     def delete_saving(self, menu_state, delete = None):
@@ -251,6 +260,7 @@ class main:
                         os.remove(dir + file + ending)
                 except:
                     print("Something went wrong!")
+                    session.close()
                     sys.exit()
                 print("All saves have been removed!")
 
@@ -270,6 +280,7 @@ class main:
                     os.remove(dir + delete + ending)
                 except:
                     print("Something went wrong!")
+                    session.close()
                     sys.exit()
                 print("Save has been removed!")
 
@@ -284,6 +295,7 @@ class main:
 
     def menu(self, state = 'main'):
         self.clear_screen()
+
         choices = ('1', '2', '3', '4', 'continue', 'save', 'load', 'start', 'quit')
         checks = ('y', 'n', 'yes', 'no')
 
@@ -303,6 +315,7 @@ class main:
             print('{}'.format('3. Quit'))
 
         print('\n\nYour progress bar: {}'.format(self.progress_bar()))
+
         choice = input("\nChoose the number of an option please.\n")
         while not choice.lower() in choices:
             choice = input("Choose the number an option or type 'info'/'help' please.\n")
@@ -319,6 +332,7 @@ class main:
 
         elif (choice == '1' or choice == 'continue') and state == 'pause':
             self.clear_screen()
+            self.load_sceen()
             self.continue_game()
 
         elif choice == '2' or choice == 'load':
@@ -335,6 +349,7 @@ class main:
                 check = input("Choose the your answer correctly please.\n")
 
             if check == 'y' or check == 'yes':
+                session.close()
                 sys.exit()
             else:
                 self.menu(state)
@@ -357,6 +372,7 @@ class shell:
     status = None
 
     directions = ( 'left', 'right', 'up', 'down' )
+
 
     info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\n\nSyntax: <continue>\n",
                       'new' : "Starts a new game.\n\nSyntax: <new>\n",
@@ -389,7 +405,7 @@ class shell:
 
     shop_list = ( 'pause', 'buy', 'sell' )
 
-    anywhere = ( 'help', 'info', 'quit'  )
+    anywhere = ( 'help', 'info', 'quit' )
 
     def __init__(self, status = 'main'):
         self.change_status(status)
