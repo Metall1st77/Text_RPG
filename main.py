@@ -375,9 +375,9 @@ class shell:
 
 
     info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\n\nSyntax: <continue>\n",
-                      'new' : "Starts a new game.\n\nSyntax: <new>\n",
+                      'start' : "Starts a new game.\n\nSyntax: <start>\n",
                       'save' : "Saves current game session.\n\nSyntax: <save> <name=>\n",
-                      'load' : "Loads a game from your saves.\n\nSyntax: <load> <name=>\n",
+                      'load' : "Loads a game from your saves.\n\nSyntax: <load>\n",
                       'show' : "Shows the statistics of anything you want to know.\n\nSyntax: <show> <stats>/<log>/<saves>\n\nstats: statistics of your character\nlog: statistics of the ingame data\nsaves: names of files you can load.\n",
                       'attack' : "Calling your character to attack the nearest enemy.\n\nSyntax: <attack> <dir=>\n\ndir: direction ({}).\n".format(directions),
                       'defend' : "Calling your character to defend from the enemy.\n\nSyntax: <defend>\n",
@@ -392,15 +392,15 @@ class shell:
                       'unequip' : "Unequips an item and puts it to your inventory.\n\nSyntax: <unequip> <item=>\n" }
 
 
-    cmd_list = ( 'continue', 'new', 'save', 'load', 'attack', 'defend', 'retire',
+    cmd_list = ( 'continue', 'start', 'save', 'load', 'attack', 'defend', 'retire',
                  'payoff', 'go', 'move', 'buy', 'sell', 'pause', 'quit', 'equip',
                  'unequip', 'show', 'use', 'help', 'info' )
 
-    on_field_list = ( 'pause', 'use', 'save', 'attack', 'defend', 'go', 'move', 'equip', 'unequip')
+    moving_list = ( 'pause', 'use', 'save', 'attack', 'defend', 'go', 'move', 'equip', 'unequip')
 
     fight_list = ( 'pause', 'use', 'retire', 'payoff' )
 
-    menu_list = ( 'continue', 'new', 'load' )
+    menu_list = ( 'continue', 'start', 'load' )
     pause_list = ( 'continue', 'load', 'save' )
 
     shop_list = ( 'pause', 'buy', 'sell' )
@@ -424,19 +424,20 @@ class shell:
             main_cmd = cmd[0]
 
             if main_cmd in self.fight_list and self.status == 'fight':
-                print(self.status)
+                correct = self.do_fight(cmd)
             elif main_cmd in self.menu_list and self.status == 'main':
-                print(self.status)
+                correct = self.do_main(cmd)
             elif main_cmd in self.pause_list and self.status == 'pause':
-                print(self.status)
-            elif main_cmd in self.on_field_list and self.status == 'moving':
-                print(self.status)
+                correct = self.do_pause(cmd)
+            elif main_cmd in self.moving_list and self.status == 'moving':
+                correct = self.do_moving(cmd)
             elif main_cmd in self.shop_list and self.status == 'shop':
-                print(self.status)
+                correct = self.do_shop(cmd)
             elif main_cmd in self.anywhere:
-                print('anywhere')
+                correct = self.do(cmd, status)
             else:
                 print("{} This command is unavailable right now.".format(self.error))
+                continue
 
     def parse(self, cmd):
         cmd = cmd.lower()
@@ -458,26 +459,126 @@ class shell:
             print("{} Incorrect command (#2). Type 'help' or 'info' to see the command list.".format(self.error))
             return False
 
+    def do_fight(self, cmd):
 
-
-    def go(self, cmd):
-        arg = arg.lower()
-        moving = arg.split()
-        directions = ('left', 'right', 'up', 'down')
-        if len(moving) != 2:
-            print("{} Wrong command. Expected direction and quantity of steps.".format(self.error))
-            self.define()
-
-        dir = moving[0]
-        steps = moving[1]
-        if not moving[0] in directions:
-            print("{} Wrong direction. Expected 'left', 'right', 'up' or 'down'.".format(self.error))
-            self.define()
-
+        q_of_commands = { 'pause' : 1,
+                          'use' : 2,
+                          'retire' : 1,
+                          'payoff' : 2 }
+        main_cmd = cmd[0]
         try:
-            steps = int(steps)
-            dir = str(dir)
-            main().move(dir, steps)
+            if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+                if main_cmd == 'pause':
+                    main().menu('pause')
+                    return True
+                elif main_cmd == 'retire':
+                    is_able = main().retire()
+                    return is_able
+                elif main_cmd == 'payoff' and int(cmd[1]):
+                    cost = cmd[1]
+                    is_able = main().payoff(cost)
+                    return is_able
+                else:
+                    item = cmd[1]
+                    is_able = main().use(item)
+                    return is_able
+            else:
+                print("{} Wrong quantity of command keywords.".format(self.error))
+                return False
         except:
-            print("{} Wrong quantity of steps. Expected an integer number of steps.".format(self.error))
-            self.define()
+            print("{} Wrong type of command keyword.".format(self.error))
+            return False
+
+    def do_main(self, cmd):
+        q_of_commands = { 'continue' : 1,
+                          'start' : 1,
+                          'load' : 1 }
+        main_cmd = cmd[0]
+        if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+            if main_cmd == 'continue':
+                main().continue_game()
+            if main_cmd == 'start':
+                main().start_game()
+            if main_cmd == 'load':
+                main().load_game('main')
+        else:
+            return False
+        return True
+
+    def do_pause(self, cmd):
+        q_of_commands = { 'continue' : 1,
+                          'load' : 1,
+                          'save' : 1 }
+        main_cmd = cmd[0]
+        if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+            if main_cmd == 'continue':
+                main().continue_game()
+            if main_cmd == 'save':
+                main().start_game('pause')
+            if main_cmd == 'load':
+                main().load_game('pause')
+        else:
+            return False
+        return True
+
+    def do_moving(self, cmd):
+        self.mo
+        q_of_commands = { 'pause' : 1,
+                          'use' : 2,
+                          'save' : 1,
+                          'attack' : ,
+                          'defend' : ,
+                          'go' : 3,
+                           }
+        main_cmd = cmd[0]
+        try:
+            if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+                if main_cmd == 'pause':
+                    main().menu('pause')
+                    return True
+                elif main_cmd == 'retire':
+                    is_able = main().retire()
+                    return is_able
+                elif main_cmd == 'payoff' and int(cmd[1]):
+                    cost = cmd[1]
+                    is_able = main().payoff(cost)
+                    return is_able
+                else:
+                    item = cmd[1]
+                    is_able = main().use(item)
+                    return is_able
+            else:
+                print("{} Wrong quantity of command keywords.".format(self.error))
+                return False
+        except:
+            print("{} Wrong type of command keyword.".format(self.error))
+            return False
+        return True
+
+    def do_shop(self, cmd):
+        return True
+
+    def do(self, cmd):
+        return True
+
+    # def go(self, cmd):
+    #     arg = arg.lower()
+    #     moving = arg.split()
+    #     directions = ('left', 'right', 'up', 'down')
+    #     if len(moving) != 2:
+    #         print("{} Wrong command. Expected direction and quantity of steps.".format(self.error))
+    #         self.define()
+    #
+    #     dir = moving[0]
+    #     steps = moving[1]
+    #     if not moving[0] in directions:
+    #         print("{} Wrong direction. Expected 'left', 'right', 'up' or 'down'.".format(self.error))
+    #         self.define()
+    #
+    #     try:
+    #         steps = int(steps)
+    #         dir = str(dir)
+    #         main().move(dir, steps)
+    #     except:
+    #         print("{} Wrong quantity of steps. Expected an integer number of steps.".format(self.error))
+    #         self.define()
