@@ -5,6 +5,8 @@ import time
 import re
 import os
 
+from termcolor import colored
+
 from creatures.creature import creature
 from creatures.human    import human
 from creatures.werewolf import werewolf
@@ -189,7 +191,7 @@ class main:
 
         return
 
-    def save_game(self, menu_state):
+    def save_game(self, menu_state = 'pause'):
         checks = ('y', 'n', 'yes', 'no')
         try:
             save = input("Type the name of the file for saving or type 'back' to go to the menu: ")
@@ -359,24 +361,57 @@ class main:
         return data
 
     def move(self, dir, steps):
-        print("You walked {} steps {}".format(steps, dir))
+        if not dir in shell().directions:
+            return False
+        print("You walked {} steps {}.".format(steps, dir))
+        return True
 
+    def retire(self):
+        return True
 
+    def payoff(self, cost):
+        return True
+
+    def use(self, item):
+        return True
+
+    def equip(self, item):
+        return True
+
+    def unequip(self, item):
+        return True
+
+    def show(self, keyword):
+        if not keyword in shell().show_keywords:
+            return False
+        return True
+
+    def attack(self, dir):
+        return True
+
+    def defend(self):
+        return True
+
+    def defend(self):
+        return True
 
 # Here comes Cmd module commands!
 
 class shell:
     prompt = 'cmd>> '
     error = '*** '
+    help = "\nType 'info'/'help' to see what you can do."
 
     status = None
 
     directions = ( 'left', 'right', 'up', 'down' )
 
+    checks = ( 'y', 'n', 'yes', 'no' )
+
 
     info_cmd_list = { 'continue' : "Continues a game after pause or loading the last saving.\n\nSyntax: <continue>\n",
                       'start' : "Starts a new game.\n\nSyntax: <start>\n",
-                      'save' : "Saves current game session.\n\nSyntax: <save> <name=>\n",
+                      'save' : "Saves current game session.\n\nSyntax: <save>\n",
                       'load' : "Loads a game from your saves.\n\nSyntax: <load>\n",
                       'show' : "Shows the statistics of anything you want to know.\n\nSyntax: <show> <stats>/<log>/<saves>\n\nstats: statistics of your character\nlog: statistics of the ingame data\nsaves: names of files you can load.\n",
                       'attack' : "Calling your character to attack the nearest enemy.\n\nSyntax: <attack> <dir=>\n\ndir: direction ({}).\n".format(directions),
@@ -391,21 +426,18 @@ class shell:
                       'equip' : "Equips an item from your inventory (only if the slot is empty).\n\nSyntax: <equip> <item=>\n",
                       'unequip' : "Unequips an item and puts it to your inventory.\n\nSyntax: <unequip> <item=>\n" }
 
-
     cmd_list = ( 'continue', 'start', 'save', 'load', 'attack', 'defend', 'retire',
                  'payoff', 'go', 'move', 'buy', 'sell', 'pause', 'quit', 'equip',
                  'unequip', 'show', 'use', 'help', 'info' )
 
-    moving_list = ( 'pause', 'use', 'save', 'attack', 'defend', 'go', 'move', 'equip', 'unequip')
-
+    moving_list = ( 'pause', 'use', 'save', 'attack', 'go', 'move', 'equip', 'unequip')
     fight_list = ( 'pause', 'use', 'retire', 'payoff' )
-
     menu_list = ( 'continue', 'start', 'load' )
     pause_list = ( 'continue', 'load', 'save' )
-
     shop_list = ( 'pause', 'buy', 'sell' )
+    anywhere = ( 'help', 'info', 'quit', 'show' )
 
-    anywhere = ( 'help', 'info', 'quit' )
+    show_keywords = ( 'stats', 'log', 'saves' )
 
     def __init__(self, status = 'main'):
         self.change_status(status)
@@ -434,9 +466,9 @@ class shell:
             elif main_cmd in self.shop_list and self.status == 'shop':
                 correct = self.do_shop(cmd)
             elif main_cmd in self.anywhere:
-                correct = self.do(cmd, status)
+                correct = self.do(cmd, self.status)
             else:
-                print("{} This command is unavailable right now.".format(self.error))
+                print("{} This command is unavailable right now. {}".format(self.error, self.help))
                 continue
 
     def parse(self, cmd):
@@ -445,19 +477,26 @@ class shell:
         try:
             cmd_check = cmd[0]
             if not cmd_check in self.cmd_list:
-                print("{} Incorrect command (#1). Type 'help' or 'info' to see the command list.".format(self.error))
+                print("{} Incorrect command. {}".format(self.error, self.help))
                 return False
             elif (cmd_check == 'help' or cmd_check == 'info') and len(cmd) == 1:
-                print("\nCommand list:\n", end='{:+^80}'.format('+'))
-                for key in self.info_cmd_list.keys():
-                    print(str(key), end=': ')
-                    print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
+                self.info()
                 return False
             else:
                 return cmd
         except:
-            print("{} Incorrect command (#2). Type 'help' or 'info' to see the command list.".format(self.error))
+            print("{} Incorrect type of the command (#2). {}".format(self.error, self.help))
             return False
+
+    def info(self):
+        print("\nCommand list:\n", end='{:+^80}'.format('+'))
+        for key in self.info_cmd_list.keys():
+            if self.status == 'menu' and key in self.menu_list or self.status == 'pause' and key in self.pause_list or self.status == 'fight' and key in self.fight_list or self.status == 'moving' and key in self.moving_list or self.status == 'shop' and key in self.shop_list:
+                print(colored(str(key), 'green'), end=': ')
+                print(colored(self.info_cmd_list[key]), end='{:-^80}'.format('-'))
+            else:
+                print(str(key), end=': ')
+                print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
 
     def do_fight(self, cmd):
 
@@ -478,15 +517,15 @@ class shell:
                     cost = cmd[1]
                     is_able = main().payoff(cost)
                     return is_able
-                else:
+                elif main_cmd == 'use':
                     item = cmd[1]
                     is_able = main().use(item)
                     return is_able
             else:
-                print("{} Wrong quantity of command keywords.".format(self.error))
+                print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
                 return False
         except:
-            print("{} Wrong type of command keyword.".format(self.error))
+            print("{} Wrong type of command keyword. {}".format(self.error, self.help))
             return False
 
     def do_main(self, cmd):
@@ -514,7 +553,7 @@ class shell:
             if main_cmd == 'continue':
                 main().continue_game()
             if main_cmd == 'save':
-                main().start_game('pause')
+                main().save_game('pause')
             if main_cmd == 'load':
                 main().load_game('pause')
         else:
@@ -522,43 +561,109 @@ class shell:
         return True
 
     def do_moving(self, cmd):
-        self.mo
         q_of_commands = { 'pause' : 1,
                           'use' : 2,
                           'save' : 1,
-                          'attack' : ,
-                          'defend' : ,
+                          'attack' : 2,
                           'go' : 3,
-                           }
+                          'move' : 3,
+                          'equip' : 2,
+                          'unequip' : 2 }
         main_cmd = cmd[0]
         try:
             if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
                 if main_cmd == 'pause':
                     main().menu('pause')
                     return True
-                elif main_cmd == 'retire':
-                    is_able = main().retire()
+                elif main_cmd == 'save':
+                    main().save_game()
+                    return True
+                elif main_cmd == 'attack' and cmd[1] in self.directions:
+                    dir = cmd[1]
+                    is_able = main().attack(self.status, dir)
                     return is_able
-                elif main_cmd == 'payoff' and int(cmd[1]):
-                    cost = cmd[1]
-                    is_able = main().payoff(cost)
-                    return is_able
-                else:
+                elif main_cmd == 'use':
                     item = cmd[1]
                     is_able = main().use(item)
                     return is_able
+                elif main_cmd == 'equip':
+                    item = cmd[1]
+                    is_able = main().equip(item)
+                    return is_able
+                elif main_cmd == 'unequip':
+                    item = cmd[1]
+                    is_able = main().equip(item)
+                    return is_able
+                elif (main_cmd == 'move' or main_cmd == 'go') and int(cmd[2]):
+                    dir = cmd[1]
+                    steps = cmd[2]
+                    is_able = main().move(dir, steps)
+                    return is_able
             else:
-                print("{} Wrong quantity of command keywords.".format(self.error))
+                print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
                 return False
         except:
-            print("{} Wrong type of command keyword.".format(self.error))
+            print("{} Wrong type of command keyword. {}".format(self.error, self.help))
             return False
         return True
 
     def do_shop(self, cmd):
+        q_of_commands = { 'pause' : 1,
+                          'buy' : 2,
+                          'sell' : 2 }
+        main_cmd = cmd[0]
+        try:
+            if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+                if main_cmd == 'pause':
+                    main().menu('pause')
+                    return True
+                elif main_cmd == 'buy':
+                    item = cmd[1]
+                    is_able = main().buy(item)
+                    return is_able
+                elif main_cmd == 'sell':
+                    item = cmd[1]
+                    is_able = main().sell(item)
+                    return is_able
+            else:
+                print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
+                return False
+        except:
+            print("{} Wrong type of command keyword. {}".format(self.error, self.help))
+            return False
         return True
 
-    def do(self, cmd):
+    def do(self, cmd, status):
+        q_of_commands = { 'quit' : 1,
+                          'help' : 1,
+                          'info' : 1,
+                          'show' : 2 }
+        main_cmd = cmd[0]
+        try:
+            if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+                if main_cmd == 'quit':
+                    check = input("Are you sure you want to quit? (y/n)\n")
+                    while not check.lower() in self.checks:
+                        check = input("Choose the your answer correctly please.\n")
+                    if check == 'y' or check == 'yes':
+                        sys.exit()
+                        return False
+                    else:
+                        return False
+                elif main_cmd == 'help' or main_cmd == 'info':
+                    item = cmd[1]
+                    self.info(status)
+                    return False
+                elif main_cmd == 'show':
+                    keyword = cmd[1]
+                    is_able = main().show(keyword)
+                    return is_able
+            else:
+                print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
+                return False
+        except:
+            print("{} Wrong type of command keyword. {}".format(self.error, self.help))
+            return False
         return True
 
     # def go(self, cmd):

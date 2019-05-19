@@ -1,0 +1,138 @@
+
+
+
+
+
+
+
+
+Command list:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++continue: Continues a game after pause or loading the last saving.
+
+Syntax: <continue>
+--------------------------------------------------------------------------------start: Starts a new game.
+
+Syntax: <start>
+--------------------------------------------------------------------------------save: Saves current game session.
+
+Syntax: <save>
+--------------------------------------------------------------------------------load: Loads a game from your saves.
+
+Syntax: <load>
+--------------------------------------------------------------------------------show: Shows the statistics of anything you want to know.
+
+Syntax: <show> <stats>/<log>/<saves>
+
+stats: statistics of your character
+log: statistics of the ingame data
+saves: names of files you can load.
+--------------------------------------------------------------------------------attack: Calling your character to attack the nearest enemy.
+
+Syntax: <attack> <dir=>
+
+dir: direction (('left', 'right', 'up', 'down')).
+--------------------------------------------------------------------------------defend: Calling your character to defend from the enemy.
+
+Syntax: <defend>
+--------------------------------------------------------------------------------retire: Calling your character to retire from the battle. The enemy won't be defeated.
+
+Syntax: <retire>
+--------------------------------------------------------------------------------payoff: Calling your character to pay off from your enemy. The enemy will be considered as defeated.
+
+Syntax: <payoff> <cost=>
+
+cost: amount of money you are going to pay.
+--------------------------------------------------------------------------------go: Calling your character to move to the specified place.
+
+Syntax: <go> <dir=> <steps=>
+
+dir: direction ('left', 'right', 'up', 'down').
+steps: the quantity of steps you want your character to do (must be an integer number)
+--------------------------------------------------------------------------------move: The same as <go>.
+
+Syntax: <move> <dir=> <steps=>
+
+dir: direction ('left', 'right', 'up', 'down').
+steps: the quantity of steps you want your character to do (must be an integer number)
+--------------------------------------------------------------------------------buy: Allows you to buy an item from the list of available.
+
+Syntax: <buy> <item=>
+--------------------------------------------------------------------------------sell: Allows you to sell an item from your inventory.
+
+Syntax: <sell> <item=>
+--------------------------------------------------------------------------------use: Allow you to use an item from your inventory.
+
+Syntax: <use> <item=>
+--------------------------------------------------------------------------------equip: Equips an item from your inventory (only if the slot is empty).
+
+Syntax: <equip> <item=>
+--------------------------------------------------------------------------------unequip: Unequips an item and puts it to your inventory.
+
+Syntax: <unequip> <item=>
+--------------------------------------------------------------------------------
+Command list:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++continue: Continues a game after pause or loading the last saving.
+
+Syntax: <continue>
+--------------------------------------------------------------------------------start: Starts a new game.
+
+Syntax: <start>
+--------------------------------------------------------------------------------save: Saves current game session.
+
+Syntax: <save>
+--------------------------------------------------------------------------------load: Loads a game from your saves.
+
+Syntax: <load>
+--------------------------------------------------------------------------------show: Shows the statistics of anything you want to know.
+
+Syntax: <show> <stats>/<log>/<saves>
+
+stats: statistics of your character
+log: statistics of the ingame data
+saves: names of files you can load.
+--------------------------------------------------------------------------------attack: Calling your character to attack the nearest enemy.
+
+Syntax: <attack> <dir=>
+
+dir: direction (('left', 'right', 'up', 'down')).
+--------------------------------------------------------------------------------defend: Calling your character to defend from the enemy.
+
+Syntax: <defend>
+--------------------------------------------------------------------------------retire: Calling your character to retire from the battle. The enemy won't be defeated.
+
+Syntax: <retire>
+--------------------------------------------------------------------------------payoff: Calling your character to pay off from your enemy. The enemy will be considered as defeated.
+
+Syntax: <payoff> <cost=>
+
+cost: amount of money you are going to pay.
+--------------------------------------------------------------------------------go: Calling your character to move to the specified place.
+
+Syntax: <go> <dir=> <steps=>
+
+dir: direction ('left', 'right', 'up', 'down').
+steps: the quantity of steps you want your character to do (must be an integer number)
+--------------------------------------------------------------------------------move: The same as <go>.
+
+Syntax: <move> <dir=> <steps=>
+
+dir: direction ('left', 'right', 'up', 'down').
+steps: the quantity of steps you want your character to do (must be an integer number)
+--------------------------------------------------------------------------------buy: Allows you to buy an item from the list of available.
+
+Syntax: <buy> <item=>
+--------------------------------------------------------------------------------sell: Allows you to sell an item from your inventory.
+
+Syntax: <sell> <item=>
+--------------------------------------------------------------------------------use: Allow you to use an item from your inventory.
+
+Syntax: <use> <item=>
+--------------------------------------------------------------------------------equip: Equips an item from your inventory (only if the slot is empty).
+
+Syntax: <equip> <item=>
+--------------------------------------------------------------------------------unequip: Unequips an item and puts it to your inventory.
+
+Syntax: <unequip> <item=>
+--------------------------------------------------------------------------------
+
+
