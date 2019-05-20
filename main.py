@@ -35,14 +35,13 @@ class main:
 
     items = ( weapons, armors, boots )
 
-    def __init__(self):
+    def __init__(self, creating = False):
         # TODO: init function
-        self.Shell = shell()
-        self.Shell.define()
-        # self.character = self.create_character()
-        # self.menu('pause')
-        self.menu()
-        return
+        if creating:
+            self.Shell = shell()
+            # self.character = self.create_character()
+            # self.menu('pause')
+            self.menu()
 
     def clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -108,20 +107,17 @@ class main:
         # character.print_stats()
         return character
 
-    def show_stats(self, character):
-        self.clear_screen()
-        print(character)
-        go = input("Type anything when you are ready...\n")
-        self.clear_screen()
-
     def game(self, game_data = data):
         # TODO: GAME!
         self.clear_screen()
 
     def start_game(self):
         self.character = self.create_character()
-        self.show_stats(self.character)
+        self.show('stats')
         Field = field(self.character)
+        self.status = 'moving'
+        self.Shell.change_status(self.status)
+        self.Shell.define()
         # Main loop
         self.game()
 
@@ -131,26 +127,27 @@ class main:
         return
 
     def load_screen(self):
-        temp = session
-        session.close()
+        temp = self.session
+        self.ession.close()
 
-        load = open(session_name, 'r')
+        load = open(self.session_name, 'r')
         for line in load:
             if line != '\n':
                 print(line, end='')
         load.close()
 
-        session = temp
+        self.session = temp
         temp.close()
 
 
     def continue_game(self):
         print("game continues")
         # TODO: come up with continueing (using progress bar maybe...)
-        session.close()
+        self.session.close()
         sys.exit()
 
     def load_game(self, menu_state):
+        self.clear_screen()
         file = open(self.file_saves, 'r')
         no = 0
         for line in file:
@@ -234,7 +231,7 @@ class main:
             print("*** Some error was accured!")
 
         # TODO: come up with saving
-        session.close()
+        self.session.close()
         sys.exit()
 
     def delete_saving(self, menu_state, delete = None):
@@ -262,7 +259,7 @@ class main:
                         os.remove(dir + file + ending)
                 except:
                     print("Something went wrong!")
-                    session.close()
+                    self.session.close()
                     sys.exit()
                 print("All saves have been removed!")
 
@@ -282,7 +279,7 @@ class main:
                     os.remove(dir + delete + ending)
                 except:
                     print("Something went wrong!")
-                    session.close()
+                    self.session.close()
                     sys.exit()
                 print("Save has been removed!")
 
@@ -351,7 +348,7 @@ class main:
                 check = input("Choose the your answer correctly please.\n")
 
             if check == 'y' or check == 'yes':
-                session.close()
+                self.session.close()
                 sys.exit()
             else:
                 self.menu(state)
@@ -384,6 +381,11 @@ class main:
     def show(self, keyword):
         if not keyword in shell().show_keywords:
             return False
+        if keyword == 'stats':
+            self.clear_screen()
+            print(self.character)
+            go = input("Type anything when you are ready...\n")
+            self.clear_screen()
         return True
 
     def attack(self, dir):
@@ -422,7 +424,7 @@ class shell:
                       'move' : "The same as <go>.\n\nSyntax: <move> <dir=> <steps=>\n\ndir: direction {}.\nsteps: the quantity of steps you want your character to do (must be an integer number)\n".format(directions),
                       'buy' : "Allows you to buy an item from the list of available.\n\nSyntax: <buy> <item=>\n",
                       'sell' : "Allows you to sell an item from your inventory.\n\nSyntax: <sell> <item=>\n",
-                      'use' : "Allow you to use an item from your inventory.\n\nSyntax: <use> <item=>\n",
+                      'use' : "Allows you to use an item from your inventory.\n\nSyntax: <use> <item=>\n",
                       'equip' : "Equips an item from your inventory (only if the slot is empty).\n\nSyntax: <equip> <item=>\n",
                       'unequip' : "Unequips an item and puts it to your inventory.\n\nSyntax: <unequip> <item=>\n" }
 
@@ -639,30 +641,26 @@ class shell:
                           'info' : 1,
                           'show' : 2 }
         main_cmd = cmd[0]
-        try:
-            if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
-                if main_cmd == 'quit':
-                    check = input("Are you sure you want to quit? (y/n)\n")
-                    while not check.lower() in self.checks:
-                        check = input("Choose the your answer correctly please.\n")
-                    if check == 'y' or check == 'yes':
-                        sys.exit()
-                        return False
-                    else:
-                        return False
-                elif main_cmd == 'help' or main_cmd == 'info':
-                    item = cmd[1]
-                    self.info(status)
+        if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
+            if main_cmd == 'quit':
+                check = input("Are you sure you want to quit? (y/n)\n")
+                while not check.lower() in self.checks:
+                    check = input("Choose the your answer correctly please.\n")
+                if check == 'y' or check == 'yes':
+                    sys.exit()
                     return False
-                elif main_cmd == 'show':
-                    keyword = cmd[1]
-                    is_able = main().show(keyword)
-                    return is_able
-            else:
-                print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
+                else:
+                    return False
+            elif main_cmd == 'help' or main_cmd == 'info':
+                item = cmd[1]
+                self.info(status)
                 return False
-        except:
-            print("{} Wrong type of command keyword. {}".format(self.error, self.help))
+            elif main_cmd == 'show':
+                keyword = cmd[1]
+                is_able = main().show(keyword)
+                return is_able
+        else:
+            print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
             return False
         return True
 

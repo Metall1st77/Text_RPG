@@ -15,5 +15,5 @@ from main import main
 # from fight import fight
 
 if __name__ == "__main__":
-    game = main()
+    game = main(True)
     # creating a mob needs (sex, level, danger lvl, attack, health, armor, job)
