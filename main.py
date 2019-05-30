@@ -99,13 +99,14 @@ class main:
         elif race == 'werewolf':
             character = werewolf(sex, race, level, danger, attack, health, armor, job)
 
-        name = input("Choose your name or get it by random (Type 'random' or nothing): ")
-        name = re.sub(r'\s', '', name.lower())
-        name += ' '
-        if name != 'random' or name != ' \n':
-            character.set_name(name)
+        try:
+            name = input("Choose your name or get it by random (Type 'random' or nothing): ")
+            name = re.sub(r'\s', '', name.lower())
+            if name != 'random':
+                character.set_name(name)
+        finally:
+            return character
         # character.print_stats()
-        return character
 
     def game(self, game_data = data):
         # TODO: GAME!

@@ -18,9 +18,16 @@ class creature:
 
     sexes = ('male', 'female')
 
-    male_names = ('Avraam', 'Ben', 'Carl', 'Dennis', 'Eagle', 'Franc')
+    male_names = ( 'Avraam', 'Ben', 'Carl', 'Dennis', 'Eagle', 'Franc', 'George',
+                   'Henry', 'Iden', 'James', 'Kael', 'Lucas', 'Mark', 'Nicolas',
+                   'Odin', 'Pablo', 'Quentin', 'Rafael', 'Sebastian', 'Travis',
+                   'Ulric', 'Vincent', 'William', 'Xavier', 'Yann', 'Zac' )
     # TODO: other male names
-    female_names = ('Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia')
+    female_names = ( 'Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia',
+                     'Gabrielle', 'Helen', 'Isabella', 'Jasmine', 'Katerina',
+                     'Luna', 'Mia', 'Nanacy', 'Olivia', 'Penny', 'Queen', 'Rachel',
+                     'Sophia', 'Tacie', 'Unity', 'Victoria', 'Willow', 'Xenia',
+                     'Ysera', 'Zenia')
     # TODO: other female names
 
     jobs = ('none', 'quest', 'helper', 'warrior')
@@ -162,6 +169,9 @@ class creature:
             self.job = new_job
         else:
             print("The job is incorrect")
+
+    def ability(self):
+        print("Actually, this creature {} doesn't have any ability...".format(self.name))
 
     def print_stats(self):
         print("{} is now level {}, ".format(self.name, self.level), end='')

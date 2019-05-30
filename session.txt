@@ -7,7 +7,7 @@
 Your progress bar: ----------
 
 Choose the number of an option please.
-Choose your race (human, werewolf, tech, treant, demon. Type 'info' to see information about races): Choose your sex (male, female): Choose your name or get it by random (Type 'random' or nothing): name :      Fefef 
+Choose your race (human, werewolf, tech, treant, demon. Type 'info' to see information about races): Choose your sex (male, female): Choose your name or get it by random (Type 'random' or nothing): name :      Ben
 race :      human
 sex :       male
 level :     0
@@ -21,4 +21,9 @@ money :     1000
 equipped :  {'weapon': None, 'armor': None, 'boots': None}
 inventory : None
 Type anything when you are ready...
-Are you sure you want to quit? (y/n)
+
+
+You walked 1 steps left.
+game started
+
+
