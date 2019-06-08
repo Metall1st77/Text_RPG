@@ -4,12 +4,17 @@ import math
 import time
 
 class field():
+    char_model = '+'
+
     biomes = ('desert', 'snow')
 
     symbs_for_biomes = { 'desert' : '.',
                          'snow'   : '\'' }
 
-    level_enemy_count = [3, 4, 6, 8, 11, 15]
+    level_enemy_count = [3, 4, 6, 8, 11, 15, 17, 19, 20, 21]
+
+    char_pos_X = 0
+    char_pos_Y = 0
 
     full_field = []
     f_rows = 50
@@ -32,6 +37,9 @@ class field():
         for row in range(self.f_rows):
             self.full_field.append([])
             for col in range(self.f_cols):
+                if row == self.char_pos_X and col == self.char_pos_Y:
+                    self.full_field[row].append(self.__add_character_on_field(row, col))
+                    continue
                 self.full_field[row].append(self.symbs_for_biomes[biome])
 
         for row in range(self.v_rows):
@@ -50,3 +58,14 @@ class field():
                 for k in range(self.v_cols):
                     print(self.visible_field[i][k], end='')
                 print()
+
+    def __add_character_on_field(self, r, c):
+        self.__set_character_pos(r, c)
+        return self.char_model
+
+    def __set_character_pos(self, r, c):
+        self.char_pos_X = r
+        self.char_pos_Y = c
+
+    def character_move():
+        return

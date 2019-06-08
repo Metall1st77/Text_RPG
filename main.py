@@ -110,15 +110,17 @@ class main:
 
     def game(self, game_data = data):
         # TODO: GAME!
-        self.clear_screen()
+        while True:
+            self.clear_screen()
+            self.Field.show()
+            self.Shell.define()
 
     def start_game(self):
         self.character = self.create_character()
         self.show('stats')
-        Field = field(self.character)
+        self.Field = field(self.character)
         self.status = 'moving'
         self.Shell.change_status(self.status)
-        self.Shell.define()
         # Main loop
         self.game()
 
@@ -139,7 +141,6 @@ class main:
 
         self.session = temp
         temp.close()
-
 
     def continue_game(self):
         print("game continues")
@@ -398,7 +399,7 @@ class main:
     def defend(self):
         return True
 
-# Here comes Cmd module commands!
+# Here comes shell module commands!
 
 class shell:
     prompt = 'cmd>> '
