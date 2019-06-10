@@ -110,6 +110,10 @@ class creature:
         data = '\n'.join(map(str, data))
         return data
 
+    def set_position(self, x, y):
+        self.char_pos_X = x
+        self.char_pos_Y = y
+
     def set_name(self, name, speech = False):
         name = name[0].upper() + name[1:].lower()
         if speech:

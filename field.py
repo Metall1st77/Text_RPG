@@ -30,12 +30,15 @@ class field():
     char_pos_Y = 0
     symbol_under_character = ''
 
-    def __init__(self, character, level = 0, enemies = level_enemy_count[0], load = False):
+    def __init__(self, character, level = 0, load = False):
+        self.enemies = level_enemy_count[enemy]
         biomes = self.__biomes_area_count()
+        self.current_level = level
+        self.character = character
         if load:
             self.load_field()
         else:
-            self.create_field(character, level, enemies, biomes)
+            self.create_field(self.character, self.current_level, self.enemies, biomes)
 
     def load_field(self):
         return
@@ -90,16 +93,31 @@ class field():
                 biomes_area.append(self.area - sum_biome_area)
 
         area = dict(zip(biomes_on_field, biomes_area))
-
         return area
 
-    def __add_character_on_field(self, r, c):
-        self.__set_character_pos(r, c)
+    def __add_character_on_field(self, row, col):
+        self.__set_character_pos(row, col)
         return self.char_model
 
-    def __set_character_pos(self, r, c):
-        self.char_pos_X = r
-        self.char_pos_Y = c
+    def __set_character_pos(self, row, col):
+        self.character.set_position(pos_X, pos_Y)
+        self.char_pos_X = row
+        self.char_pos_Y = col
 
-    def character_move():
+    def character_move(self, steps, dir):
+        self.character.set_position(pos_X, pos_Y)
+        if can_move(steps, dir):
+            if dir == 'up':
+                x = self.char_pos_X
+                y = self.char_pos_Y - steps
+            elif dir == 'right':
+                x = self.char_pos_X + steps
+                y = self.char_pos_Y
+            elif dir == 'down':
+                x = self.char_pos_X
+                y = self.char_pos_Y + steps
+            elif dir == 'left':
+                x = self.char_pos_X - steps
+                y = self.char_pos_Y
+            self.__set_character_pos()
         return
