@@ -1,8 +1,6 @@
 from creatures.creature import creature
 
 class human(creature):
-    # human has much money on the beginning;
-    # human has more armor, but little bit less attack and health;
 
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)

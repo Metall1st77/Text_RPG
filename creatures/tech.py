@@ -1,8 +1,6 @@
 from creatures.creature import creature
 
 class tech(creature):
-    # tech has an ability to create mechanisms and restore an armor
-    # tech has much more armour but less attack and health
 
     max_mana = 100
 

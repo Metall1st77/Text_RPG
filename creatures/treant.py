@@ -1,8 +1,6 @@
 from creatures.creature import creature
 
 class treant(creature):
-    # treant has an ability to enter a tree astral and get invulnerability
-    # treant has much more health, but less attack and armor
 
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)

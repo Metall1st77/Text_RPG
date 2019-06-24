@@ -1,8 +1,6 @@
 from creatures.creature import creature
 
 class demon(creature):
-    # demon has an ability to eat souls
-    # demon has much more attack, but less armor and health
 
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)

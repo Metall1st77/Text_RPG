@@ -1,9 +1,6 @@
 from creatures.creature import creature
 
 class werewolf(creature):
-    # werewolf has an ability to become either human or wolf;
-    # as wolf he is faster and has more attack and health, but less armor,
-    # as human he is slower and has more armor, but less attack and health;
 
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         creature.__init__(self, sex, race, level, danger, attack, health, armor, job)

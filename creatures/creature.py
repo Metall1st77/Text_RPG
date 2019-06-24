@@ -22,13 +22,11 @@ class creature:
                    'Henry', 'Iden', 'James', 'Kael', 'Lucas', 'Mark', 'Nicolas',
                    'Odin', 'Pablo', 'Quentin', 'Rafael', 'Sebastian', 'Travis',
                    'Ulric', 'Vincent', 'William', 'Xavier', 'Yann', 'Zac' )
-    # TODO: other male names
     female_names = ( 'Alivia', 'Bella', 'Clara', 'Danna', 'Erica', 'Felicia',
                      'Gabrielle', 'Helen', 'Isabella', 'Jasmine', 'Katerina',
                      'Luna', 'Mia', 'Nanacy', 'Olivia', 'Penny', 'Queen', 'Rachel',
                      'Sophia', 'Tacie', 'Unity', 'Victoria', 'Willow', 'Xenia',
                      'Ysera', 'Zenia')
-    # TODO: other female names
 
     jobs = ('none', 'quest', 'helper', 'warrior')
     races = ('human', 'werewolf', 'treant', 'tech', 'demon')
@@ -47,15 +45,6 @@ class creature:
     much = 40
     standard_speed = 50
     damage_by_soul = 3
-
- # = random.choice(sexes)
- # = random.choice(races)
- # = random.randint(0, max_level)
- # = random.choice(dangers)
- # = random.randint(0, max_attack)
- # = random.randint(1, max_health)
- # = random.randint(0, max_armor)
- # = random.choice(jobs)
 
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         self.sex = sex
