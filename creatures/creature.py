@@ -49,13 +49,13 @@ class creature:
     def __init__(self, sex, race, level, danger, attack, health, armor, job):
         self.sex = sex
         self.race = race
-        self.level = level
+        self.level = int(level)
         self.danger = danger
-        self.attack = attack
-        self.health = health
-        self.armor = armor
+        self.attack = int(attack)
+        self.health = int(health)
+        self.armor = int(armor)
         self.portrait = 'portraits/'
-        self.job = None
+        self.job = job
         self.money = 0
         self.mana = self.max_mana
         self.speed = self.standard_speed

@@ -6,6 +6,9 @@ class logger(object):
 
     def __init__(self, filename="session.txt", mode='w', buff=1):
         self.stdout = sys.stdout
+        self.filename = filename
+        self.mode = mode
+        self.buff = buff
         self.file = open(filename, mode, buff)
         sys.stdout = self
 
@@ -17,6 +20,10 @@ class logger(object):
 
     def __exit__(self, *args):
         pass
+
+    def clear(self):
+        self.file.close()
+        self.file = open(self.filename, self.mode, self.buff)
 
     def write(self, message):
         self.stdout.write(message)

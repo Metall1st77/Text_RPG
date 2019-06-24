@@ -45,6 +45,7 @@ class main:
 
     def clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
+        self.session.clear()
 
     def loading(t = 1):
         # clear_screen()

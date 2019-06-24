@@ -3,6 +3,8 @@ import sys
 import math
 import time
 
+from creatures.creature import creature
+
 class field():
     char_model = 'X'
 
@@ -31,7 +33,7 @@ class field():
     symbol_under_character = ''
 
     def __init__(self, character, level = 0, load = False):
-        self.enemies = level_enemy_count[enemy]
+        self.enemies = self.level_enemy_count[level]
         biomes = self.__biomes_area_count()
         self.current_level = level
         self.character = character
@@ -121,3 +123,15 @@ class field():
                 y = self.char_pos_Y
             self.__set_character_pos()
         return
+
+if __name__ == '__main__':
+    creating_hero = { 'sex' : 'male',
+                      'race' : 'human',
+                      'level' : '1',
+                      'danger' : None,
+                      'attack' : '10',
+                      'health' : '100',
+                      'armor' : '10',
+                      'job' : None }
+    Hero = creature(**creating_hero)
+    Field = field(Hero)
