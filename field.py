@@ -13,7 +13,8 @@ class field():
     symbs_for_biomes = { 'desert' : '.',
                          'snow'   : '\'',
                          'swamp'  : ',',
-                         'ground' : '+' }
+                         'ground' : '+',
+                         'forest' : '^' }
 
     level_enemy_count = [3, 4, 6, 8, 11, 15, 17, 19, 20, 21]
 
@@ -40,16 +41,19 @@ class field():
         if load:
             self.load_field()
         else:
-            self.create_field(self.character, self.current_level, self.enemies, biomes)
+            self.__create_field(self.character, self.current_level, self.enemies, biomes)
 
     def load_field(self):
         return
 
-    def create_field(self, character, level, enemies, biomes):
+    def __create_field(self, character, level, enemies, biomes):
         for row in range(self.f_rows):
+            self.visible_field.append([])
             for col in range(self.f_cols):
-                if row == self.char_pos_X and col == self.char_pos_Y:
-                    continue
+                self.full_field[row].append(self.__define_point(x, y))
+
+            self.full_field[character.pos_X][character.pos_Y] = self.char_model
+
 
         for row in range(self.v_rows):
             self.visible_field.append([])
@@ -67,6 +71,9 @@ class field():
                 for k in range(self.v_cols):
                     print(self.visible_field[i][k], end='')
                 print()
+
+    # def __define_point(self, x, y):
+
 
     def __biomes_area_count(self):
         biomes_count = random.randint(2, len(self.biomes))
@@ -95,6 +102,10 @@ class field():
                 biomes_area.append(self.area - sum_biome_area)
 
         area = dict(zip(biomes_on_field, biomes_area))
+        # print(biomes_count)
+        # print(biomes_on_field)
+        # print(biomes_area)
+        # print(area)
         return area
 
     def __add_character_on_field(self, row, col):
