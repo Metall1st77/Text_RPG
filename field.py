@@ -41,19 +41,13 @@ class field():
         if load:
             self.load_field()
         else:
-            self.__create_field(self.character, self.current_level, self.enemies, biomes)
+            self.__create_field(self.character, self.enemies, biomes)
 
     def load_field(self):
         return
 
-    def __create_field(self, character, level, enemies, biomes):
-        for row in range(self.f_rows):
-            self.visible_field.append([])
-            for col in range(self.f_cols):
-                self.full_field[row].append(self.__define_point(x, y))
-
-            self.full_field[character.pos_X][character.pos_Y] = self.char_model
-
+    def __create_field(self, character, enemies, biomes):
+        starting_spots = self.__define_starting_spots(biomes)
 
         for row in range(self.v_rows):
             self.visible_field.append([])
@@ -72,8 +66,18 @@ class field():
                     print(self.visible_field[i][k], end='')
                 print()
 
-    # def __define_point(self, x, y):
+    def __define_starting_spots(self, biomes):
+        central_point_x = self.f_rows // 2
+        central_point_y = self.f_cols // 2
+        diagonal = math.sqrt(math.pow(self.f_rows, 2) + math.pow(self.f_cols, 2))
+        radius = int(0.25 * diagonal)
+        angle = (2 * math.pi) / len(biomes)
 
+        min_x = 
+
+    def _circle(self, x, start_x = 0, start_y = 0, radius = 0):
+        y = math.sqrt(math.pow(radius, 2) - math.pow((x - start_x), 2)) + start_y
+        return y
 
     def __biomes_area_count(self):
         biomes_count = random.randint(2, len(self.biomes))
@@ -132,7 +136,7 @@ class field():
             elif dir == 'left':
                 x = self.char_pos_X - steps
                 y = self.char_pos_Y
-            self.__set_character_pos()
+            self.__set_character_pos(x, y)
         return
 
 if __name__ == '__main__':
