@@ -48,6 +48,7 @@ class field():
 
     def __create_field(self, character, enemies, biomes):
         starting_spots = self.__define_starting_spots(biomes)
+        self.__fill_field()
 
         for row in range(self.v_rows):
             self.visible_field.append([])
@@ -67,13 +68,20 @@ class field():
                 print()
 
     def __define_starting_spots(self, biomes):
-        central_point_x = self.f_rows // 2
-        central_point_y = self.f_cols // 2
+        number_of_points = len(biomes)
+        central_point = { 'x' : self.f_rows // 2,
+                          'y' : self.f_cols // 2 }
         diagonal = math.sqrt(math.pow(self.f_rows, 2) + math.pow(self.f_cols, 2))
-        radius = int(0.25 * diagonal)
-        angle = (2 * math.pi) / len(biomes)
+        radius = int(random.randint(2, 3) / 10 * diagonal)
+        angle = (2 * math.pi) / number_of_points
+        starting_spots = []
+        for i in range(number_of_points):
+            X = radius * math.cos(angle * i) + central_point['x']
+            Y = radius * math.sin(angle * i) + central_point['y']
+            spot = (X, Y)
+            starting_spots.append(spot)
+        return starting_spots
 
-        min_x = 
 
     def _circle(self, x, start_x = 0, start_y = 0, radius = 0):
         y = math.sqrt(math.pow(radius, 2) - math.pow((x - start_x), 2)) + start_y
