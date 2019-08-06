@@ -102,25 +102,20 @@ class field():
             i += 1
 
         while not full:
-            detected = False
-            previous_biomes = []
-            while not detected:
-                for row in range(self.f_rows):
-                    for col in range(self.f_cols):
-                        if self.full_field[row][col] != self.no_model and not self.full_field[row][col] in previous_biomes:
-                            if len(previous_biomes) < len(biomes) - 1:
-                                current_biome = self.full_field[row][col]
-                                previous_biomes.append(current_biome)
-                                already_spreaded = self.__spread(row, col, current_biome)
-                                if not already_spreaded:
-                                    detected = True
-                            else:
-                                previous_biomes.remove(previous_biomes[0])
-                                current_biome = self.full_field[row][col]
-                                previous_biomes.append(current_biome)
-                                already_spreaded = self.__spread(row, col, current_biome)
-                                if not already_spreaded:
-                                    detected = True
+            current_spots = []
+            for row in range(self.f_rows):
+                for col in range(self.f_cols):
+                    spot = self.full_field[row][col]
+                    if spot != self.no_model and not self.__spread(row, col, spot, do=False):
+                        current_spot = (spot, row, col)
+                        current_spots.append(current_spot)
+
+            random.shuffle(current_spots)
+            for spot in range(len(current_spots)):
+                x = current_spots[spot][1]
+                y = current_spots[spot][2]
+                symbol = current_spots[spot][0]
+                self.__spread(x, y, symbol)
 
             sub_full = True
             for row in range(self.f_rows):
@@ -130,26 +125,55 @@ class field():
                         break
                 if not sub_full:
                     break
-
+            if sub_full == True:
+                full = True
 
         self.show(True)
         return
 
-    def __spread(self, x, y, symbol):
+
+# while not detected:
+#     for row in range(self.f_rows):
+#         for col in range(self.f_cols):
+#             if self.full_field[row][col] != self.no_model and not self.full_field[row][col] in previous_biomes:
+#                 if len(previous_biomes) < len(biomes) - 1:
+#                     current_biome = self.full_field[row][col]
+#                     previous_biomes.append(current_biome)
+#                     already_spreaded = self.__spread(row, col, current_biome)
+#                     if not already_spreaded:
+#                         detected = True
+#                 else:
+#                     previous_biomes.remove(previous_biomes[0])
+#                     current_biome = self.full_field[row][col]
+#                     previous_biomes.append(current_biome)
+#                     already_spreaded = self.__spread(row, col, current_biome)
+#                     if not already_spreaded:
+#                         detected = True
+#
+# sub_full = True
+# for row in range(self.f_rows):
+#     for col in range(self.f_cols):
+#         if self.full_field[row][col] == self.no_model:
+#             sub_full = False
+#             break
+#     if not sub_full:
+#         break
+
+    def __spread(self, x, y, symbol, do=True):
         already_spreaded = True
-        if x != 0 and self.full_field[x - 1][y] == self.no_model:
-            self.full_field[x - 1][y] = symbol
-            already_spreaded = False
-        if y != 0 and self.full_field[x][y - 1] == self.no_model:
-            self.full_field[x][y - 1] = symbol
-            already_spreaded = False
-        if x != self.f_rows - 1 and self.full_field[x + 1][y] == self.no_model:
-            self.full_field[x + 1][y] = symbol
-            already_spreaded = False
-        if y != self.f_cols - 1 and self.full_field[x][y + 1] == self.no_model:
-            self.full_field[x][y + 1] = symbol
-            already_spreaded = False
-        return already_spreaded
+        if do:
+            if x != 0 and self.full_field[x - 1][y] == self.no_model:
+                self.full_field[x - 1][y] = symbol
+            if y != 0 and self.full_field[x][y - 1] == self.no_model:
+                self.full_field[x][y - 1] = symbol
+            if x != self.f_rows - 1 and self.full_field[x + 1][y] == self.no_model:
+                self.full_field[x + 1][y] = symbol
+            if y != self.f_cols - 1 and self.full_field[x][y + 1] == self.no_model:
+                self.full_field[x][y + 1] = symbol
+        else:
+            if x != 0 and self.full_field[x - 1][y] == self.no_model or y != 0 and self.full_field[x][y - 1] == self.no_model or x != self.f_rows - 1 and self.full_field[x + 1][y] == self.no_model or y != self.f_cols - 1 and self.full_field[x][y + 1] == self.no_model:
+                already_spreaded = False
+            return already_spreaded
 
 
     def __biomes_area_count(self):
