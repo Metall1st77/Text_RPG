@@ -17,6 +17,12 @@ class field():
                          'ground' : '+',
                          'forest' : '^' }
 
+    biomes_by_symbs = { '.'   : 'desert',
+                         '\'' : 'snow',
+                         ','  : 'swamp',
+                         '+'  : 'ground',
+                         '^'  : 'forest' }
+
     level_enemy_count = [3, 4, 6, 8, 11, 15, 17, 19, 20, 21]
 
     full_field = []
@@ -54,10 +60,8 @@ class field():
 
         self.__spreading(starting_spots, biomes)
 
-        for row in range(self.v_rows):
-            self.visible_field.append([])
-            for col in range(self.v_cols):
-                self.visible_field[row].append(self.full_field[row][col])
+        self._add_character_on_field()
+
 
     def show(self, full = False):
         if full:
@@ -70,6 +74,12 @@ class field():
                 for k in range(self.v_cols):
                     print(self.visible_field[i][k], end='')
                 print()
+
+    def __update_visible_field(self, down=0, right=0):
+        for row in range(self.v_rows):
+            self.visible_field.append([])
+            for col in range(self.v_cols):
+                self.visible_field[row].append(self.full_field[row + right][col + down])
 
     def __define_starting_spots(self, biomes):
         number_of_points = len(biomes)
@@ -101,21 +111,23 @@ class field():
             self.full_field[x][y] = self.symbs_for_biomes[spot]
             i += 1
 
+
         while not full:
             current_spots = []
             for row in range(self.f_rows):
                 for col in range(self.f_cols):
                     spot = self.full_field[row][col]
-                    if spot != self.no_model and not self.__spread(row, col, spot, do=False):
-                        current_spot = (spot, row, col)
+                    nearest = self.__nearest(row, col)
+                    if spot == self.no_model and nearest != []:
+                        current_spot = (row, col, nearest)
                         current_spots.append(current_spot)
 
-            random.shuffle(current_spots)
             for spot in range(len(current_spots)):
-                x = current_spots[spot][1]
-                y = current_spots[spot][2]
-                symbol = current_spots[spot][0]
-                self.__spread(x, y, symbol)
+                x = current_spots[spot][0]
+                y = current_spots[spot][1]
+                s = random.choice(current_spots[spot][2])
+                symbol = s[0]
+                self.full_field[x][y] = symbol
 
             sub_full = True
             for row in range(self.f_rows):
@@ -128,53 +140,24 @@ class field():
             if sub_full == True:
                 full = True
 
-        self.show(True)
+        # self.show(True)
         return
 
-
-# while not detected:
-#     for row in range(self.f_rows):
-#         for col in range(self.f_cols):
-#             if self.full_field[row][col] != self.no_model and not self.full_field[row][col] in previous_biomes:
-#                 if len(previous_biomes) < len(biomes) - 1:
-#                     current_biome = self.full_field[row][col]
-#                     previous_biomes.append(current_biome)
-#                     already_spreaded = self.__spread(row, col, current_biome)
-#                     if not already_spreaded:
-#                         detected = True
-#                 else:
-#                     previous_biomes.remove(previous_biomes[0])
-#                     current_biome = self.full_field[row][col]
-#                     previous_biomes.append(current_biome)
-#                     already_spreaded = self.__spread(row, col, current_biome)
-#                     if not already_spreaded:
-#                         detected = True
-#
-# sub_full = True
-# for row in range(self.f_rows):
-#     for col in range(self.f_cols):
-#         if self.full_field[row][col] == self.no_model:
-#             sub_full = False
-#             break
-#     if not sub_full:
-#         break
-
-    def __spread(self, x, y, symbol, do=True):
-        already_spreaded = True
-        if do:
-            if x != 0 and self.full_field[x - 1][y] == self.no_model:
-                self.full_field[x - 1][y] = symbol
-            if y != 0 and self.full_field[x][y - 1] == self.no_model:
-                self.full_field[x][y - 1] = symbol
-            if x != self.f_rows - 1 and self.full_field[x + 1][y] == self.no_model:
-                self.full_field[x + 1][y] = symbol
-            if y != self.f_cols - 1 and self.full_field[x][y + 1] == self.no_model:
-                self.full_field[x][y + 1] = symbol
-        else:
-            if x != 0 and self.full_field[x - 1][y] == self.no_model or y != 0 and self.full_field[x][y - 1] == self.no_model or x != self.f_rows - 1 and self.full_field[x + 1][y] == self.no_model or y != self.f_cols - 1 and self.full_field[x][y + 1] == self.no_model:
-                already_spreaded = False
-            return already_spreaded
-
+    def __nearest(self, x, y):
+        neighbours = []
+        if x != 0 and self.full_field[x - 1][y] != self.no_model:
+            spot = (self.full_field[x - 1][y], x - 1, y)
+            neighbours.append(spot)
+        if y != 0 and self.full_field[x][y - 1] != self.no_model:
+            spot = (self.full_field[x][y - 1], x, y - 1)
+            neighbours.append(spot)
+        if x != self.f_rows - 1 and self.full_field[x + 1][y] != self.no_model:
+            spot = (self.full_field[x + 1][y], x + 1, y)
+            neighbours.append(spot)
+        if y != self.f_cols - 1 and self.full_field[x][y + 1] != self.no_model:
+            spot = (self.full_field[x][y + 1], x, y + 1)
+            neighbours.append(spot)
+        return neighbours
 
     def __biomes_area_count(self):
         biomes_count = random.randint(2, len(self.biomes))
@@ -209,32 +192,38 @@ class field():
         # print(area.keys())
         return area
 
-    def __add_character_on_field(self, row, col):
+    def _add_character_on_field(self, row=0, col=0):
         self.__set_character_pos(row, col)
-        return self.char_model
+        self.full_field[row][col] = self.char_model
+
+        self.__update_visible_field()
 
     def __set_character_pos(self, row, col):
+        pos_X = row
+        pos_Y = col
         self.character.set_position(pos_X, pos_Y)
-        self.char_pos_X = row
-        self.char_pos_Y = col
+        self.char_pos_X = pos_X
+        self.char_pos_Y = pos_Y
 
-    def character_move(self, steps, dir):
+    def character_move(self, dir, steps):
+        if dir == 'up' and self.char_pos_Y >= steps:
+            x = self.char_pos_X
+            y = self.char_pos_Y - steps
+        elif dir == 'right' and self.char_pos_X + steps <= self.f_cols:
+            x = self.char_pos_X + steps
+            y = self.char_pos_Y
+        elif dir == 'down' and self.char_pos_Y + steps <= self.f_rows:
+            x = self.char_pos_X
+            y = self.char_pos_Y + steps
+        elif dir == 'left' and self.char_pos_X >= steps:
+            x = self.char_pos_X - steps
+            y = self.char_pos_Y
+        else:
+            return False
+        self.__set_character_pos(x, y)
         self.character.set_position(pos_X, pos_Y)
-        if can_move(steps, dir):
-            if dir == 'up':
-                x = self.char_pos_X
-                y = self.char_pos_Y - steps
-            elif dir == 'right':
-                x = self.char_pos_X + steps
-                y = self.char_pos_Y
-            elif dir == 'down':
-                x = self.char_pos_X
-                y = self.char_pos_Y + steps
-            elif dir == 'left':
-                x = self.char_pos_X - steps
-                y = self.char_pos_Y
-            self.__set_character_pos(x, y)
-        return
+        return True
+
 
 if __name__ == '__main__':
     creating_hero = { 'sex' : 'male',

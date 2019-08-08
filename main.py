@@ -39,8 +39,6 @@ class main:
         # TODO: init function
         if creating:
             self.Shell = shell()
-            # self.character = self.create_character()
-            # self.menu('pause')
             self.menu()
 
     def clear_screen(self):
@@ -48,7 +46,7 @@ class main:
         self.session.clear()
 
     def loading(t = 1):
-        # clear_screen()
+
         k = 0
         print("Loading", end='')
         while k < 3:
@@ -107,10 +105,9 @@ class main:
                 character.set_name(name)
         finally:
             return character
-        # character.print_stats()
 
     def game(self, game_data = data):
-        # TODO: GAME!
+
         while True:
             self.clear_screen()
             self.Field.show()
@@ -122,13 +119,8 @@ class main:
         self.Field = field(self.character)
         self.status = 'moving'
         self.Shell.change_status(self.status)
-        # Main loop
-        self.game()
 
-        print("game started")
-        print("\n")
-        # TODO: starting game and a plot
-        return
+        self.game()
 
     def load_screen(self):
         temp = self.session
@@ -361,10 +353,7 @@ class main:
         return data
 
     def move(self, dir, steps):
-        if not dir in shell().directions:
-            return False
-        print("You walked {} steps {}.".format(steps, dir))
-        return True
+        self.Field.character_move(dir, steps)
 
     def retire(self):
         return True
@@ -475,6 +464,8 @@ class shell:
             else:
                 print("{} This command is unavailable right now. {}".format(self.error, self.help))
                 continue
+            if correct:
+                return correct
 
     def parse(self, cmd):
         cmd = cmd.lower()
@@ -516,15 +507,15 @@ class shell:
                     main().menu('pause')
                     return True
                 elif main_cmd == 'retire':
-                    is_able = main().retire()
+                    main().retire()
                     return is_able
                 elif main_cmd == 'payoff' and int(cmd[1]):
                     cost = cmd[1]
-                    is_able = main().payoff(cost)
+                    main().payoff(cost)
                     return is_able
                 elif main_cmd == 'use':
                     item = cmd[1]
-                    is_able = main().use(item)
+                    main().use(item)
                     return is_able
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
@@ -585,25 +576,25 @@ class shell:
                     return True
                 elif main_cmd == 'attack' and cmd[1] in self.directions:
                     dir = cmd[1]
-                    is_able = main().attack(self.status, dir)
+                    main().attack(self.status, dir)
                     return is_able
                 elif main_cmd == 'use':
                     item = cmd[1]
-                    is_able = main().use(item)
+                    main().use(item)
                     return is_able
                 elif main_cmd == 'equip':
                     item = cmd[1]
-                    is_able = main().equip(item)
+                    main().equip(item)
                     return is_able
                 elif main_cmd == 'unequip':
                     item = cmd[1]
-                    is_able = main().equip(item)
+                    main().equip(item)
                     return is_able
                 elif (main_cmd == 'move' or main_cmd == 'go') and int(cmd[2]):
                     dir = cmd[1]
                     steps = cmd[2]
-                    is_able = main().move(dir, steps)
-                    return is_able
+
+                    return main().move(dir, steps)
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
                 return False
@@ -624,11 +615,11 @@ class shell:
                     return True
                 elif main_cmd == 'buy':
                     item = cmd[1]
-                    is_able = main().buy(item)
+                    main().buy(item)
                     return is_able
                 elif main_cmd == 'sell':
                     item = cmd[1]
-                    is_able = main().sell(item)
+                    main().sell(item)
                     return is_able
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
@@ -660,31 +651,9 @@ class shell:
                 return False
             elif main_cmd == 'show':
                 keyword = cmd[1]
-                is_able = main().show(keyword)
+                main().show(keyword)
                 return is_able
         else:
             print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
             return False
         return True
-
-    # def go(self, cmd):
-    #     arg = arg.lower()
-    #     moving = arg.split()
-    #     directions = ('left', 'right', 'up', 'down')
-    #     if len(moving) != 2:
-    #         print("{} Wrong command. Expected direction and quantity of steps.".format(self.error))
-    #         self.define()
-    #
-    #     dir = moving[0]
-    #     steps = moving[1]
-    #     if not moving[0] in directions:
-    #         print("{} Wrong direction. Expected 'left', 'right', 'up' or 'down'.".format(self.error))
-    #         self.define()
-    #
-    #     try:
-    #         steps = int(steps)
-    #         dir = str(dir)
-    #         main().move(dir, steps)
-    #     except:
-    #         print("{} Wrong quantity of steps. Expected an integer number of steps.".format(self.error))
-    #         self.define()
