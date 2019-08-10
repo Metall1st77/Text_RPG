@@ -38,7 +38,7 @@ class main:
     def __init__(self, creating = False):
         # TODO: init function
         if creating:
-            self.Shell = shell()
+            print("hi")
             self.menu()
 
     def clear_screen(self):
@@ -107,19 +107,16 @@ class main:
             return character
 
     def game(self, game_data = data):
-
         while True:
             self.clear_screen()
             self.Field.show()
-            self.Shell.define()
+            self.define()
 
     def start_game(self):
         self.character = self.create_character()
         self.show('stats')
         self.Field = field(self.character)
         self.status = 'moving'
-        self.Shell.change_status(self.status)
-
         self.game()
 
     def load_screen(self):
@@ -312,7 +309,7 @@ class main:
 
         choice = input("\nChoose the number of an option please.\n")
         while not choice.lower() in choices:
-            choice = input("Choose the number an option or type 'info'/'help' please.\n")
+            choice = input("Choose the number of an option or type 'info'/'help' please.\n")
             choice = choice.lower()
             if choice == 'info' or choice == 'help':
                 if state == 'main':
@@ -371,7 +368,7 @@ class main:
         return True
 
     def show(self, keyword):
-        if not keyword in shell().show_keywords:
+        if not keyword in self.show_keywords:
             return False
         if keyword == 'stats':
             self.clear_screen()
@@ -390,13 +387,9 @@ class main:
         return True
 
 # Here comes shell module commands!
-
-class shell:
     prompt = 'cmd>> '
     error = '*** '
     help = "\nType 'info'/'help' to see what you can do."
-
-    status = None
 
     directions = ( 'left', 'right', 'up', 'down' )
 
@@ -495,7 +488,6 @@ class shell:
                 print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
 
     def do_fight(self, cmd):
-
         q_of_commands = { 'pause' : 1,
                           'use' : 2,
                           'retire' : 1,
@@ -504,18 +496,18 @@ class shell:
         try:
             if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
                 if main_cmd == 'pause':
-                    main().menu('pause')
+                    self.menu('pause')
                     return True
                 elif main_cmd == 'retire':
-                    main().retire()
+                    self.retire()
                     return is_able
                 elif main_cmd == 'payoff' and int(cmd[1]):
                     cost = cmd[1]
-                    main().payoff(cost)
+                    self.payoff(cost)
                     return is_able
                 elif main_cmd == 'use':
                     item = cmd[1]
-                    main().use(item)
+                    self.use(item)
                     return is_able
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
@@ -531,11 +523,11 @@ class shell:
         main_cmd = cmd[0]
         if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
             if main_cmd == 'continue':
-                main().continue_game()
+                self.continue_game()
             if main_cmd == 'start':
-                main().start_game()
+                self.start_game()
             if main_cmd == 'load':
-                main().load_game('main')
+                self.load_game('main')
         else:
             return False
         return True
@@ -547,11 +539,11 @@ class shell:
         main_cmd = cmd[0]
         if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
             if main_cmd == 'continue':
-                main().continue_game()
+                self.continue_game()
             if main_cmd == 'save':
-                main().save_game('pause')
+                self.save_game('pause')
             if main_cmd == 'load':
-                main().load_game('pause')
+                self.load_game('pause')
         else:
             return False
         return True
@@ -569,32 +561,31 @@ class shell:
         try:
             if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
                 if main_cmd == 'pause':
-                    main().menu('pause')
+                    self.menu('pause')
                     return True
                 elif main_cmd == 'save':
-                    main().save_game()
+                    self.save_game()
                     return True
                 elif main_cmd == 'attack' and cmd[1] in self.directions:
                     dir = cmd[1]
-                    main().attack(self.status, dir)
+                    self.attack(self.status, dir)
                     return is_able
                 elif main_cmd == 'use':
                     item = cmd[1]
-                    main().use(item)
+                    self.use(item)
                     return is_able
                 elif main_cmd == 'equip':
                     item = cmd[1]
-                    main().equip(item)
+                    self.equip(item)
                     return is_able
                 elif main_cmd == 'unequip':
                     item = cmd[1]
-                    main().equip(item)
+                    self.equip(item)
                     return is_able
                 elif (main_cmd == 'move' or main_cmd == 'go') and int(cmd[2]):
                     dir = cmd[1]
                     steps = cmd[2]
-
-                    return main().move(dir, steps)
+                    return self.move(dir, steps)
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
                 return False
@@ -611,15 +602,15 @@ class shell:
         try:
             if main_cmd in q_of_commands.keys() and len(cmd) == q_of_commands[main_cmd]:
                 if main_cmd == 'pause':
-                    main().menu('pause')
+                    self.menu('pause')
                     return True
                 elif main_cmd == 'buy':
                     item = cmd[1]
-                    main().buy(item)
+                    self.buy(item)
                     return is_able
                 elif main_cmd == 'sell':
                     item = cmd[1]
-                    main().sell(item)
+                    self.sell(item)
                     return is_able
             else:
                 print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
@@ -651,7 +642,7 @@ class shell:
                 return False
             elif main_cmd == 'show':
                 keyword = cmd[1]
-                main().show(keyword)
+                self.show(keyword)
                 return is_able
         else:
             print("{} Wrong quantity of command keywords. {}".format(self.error, self.help))
