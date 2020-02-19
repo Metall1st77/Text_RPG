@@ -5,7 +5,6 @@ import time
 import re
 import os
 
-from termcolor import colored
 
 from creatures.creature import creature
 from creatures.human    import human
@@ -485,14 +484,14 @@ class shell:
             return False
 
     def info(self):
-        print("\nCommand list:\n", end='{:+^80}'.format('+'))
+        print("\nCommand list:\n", end='{:+^120}'.format('+'))
         for key in self.info_cmd_list.keys():
             if self.status == 'menu' and key in self.menu_list or self.status == 'pause' and key in self.pause_list or self.status == 'fight' and key in self.fight_list or self.status == 'moving' and key in self.moving_list or self.status == 'shop' and key in self.shop_list:
                 print(colored(str(key), 'green'), end=': ')
-                print(colored(self.info_cmd_list[key]), end='{:-^80}'.format('-'))
+                print(colored(self.info_cmd_list[key]), end='{:-^120}'.format('-'))
             else:
                 print(str(key), end=': ')
-                print(self.info_cmd_list[key], end='{:-^80}'.format('-'))
+                print(self.info_cmd_list[key], end='{:-^120}'.format('-'))
 
     def do_fight(self, cmd):
 
