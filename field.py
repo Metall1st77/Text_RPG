@@ -18,10 +18,10 @@ class field():
                          'forest' : '^' }
 
     biomes_by_symbs = { '.'   : 'desert',
-                         '\'' : 'snow',
-                         ','  : 'swamp',
-                         '+'  : 'ground',
-                         '^'  : 'forest' }
+                        '\'' : 'snow',
+                        ','  : 'swamp',
+                        '+'  : 'ground',
+                        '^'  : 'forest' }
 
     level_enemy_count = [3, 4, 6, 8, 11, 15, 17, 19, 20, 21]
 
